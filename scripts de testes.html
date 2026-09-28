@@ -1,0 +1,2413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scripts de Testes de Acessibilidade — Formato Tabular</title>
+<style>
+  :root {
+    --bg: #F0F4F2;
+    --surface: #FFFFFF;
+    --ink: #12201A;
+    --ink-soft: #47594F;
+    --line: #C8D5CC;
+    --accent: #0D6E5E;
+    --accent-light: #E0EFE9;
+    --accent-dark: #094E43;
+    --warn: #B8842E;
+    --warn-light: #FDF3E3;
+    --new22: #6B3FA0;
+    --new22-light: #F2EAFA;
+    --radius: 10px;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+    --sans: "Inter", system-ui, -apple-system, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  a { color: var(--accent); }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+  /* ---- HEADER ---- */
+  .site-header {
+    background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
+    color: #fff;
+    padding: 2.5rem 2rem 2rem;
+  }
+  .header-inner { max-width: 1200px; margin: 0 auto; }
+  .header-tag {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,1.0);
+    margin-bottom: 0.6rem;
+  }
+  .site-header h1 {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+  }
+  .site-header p {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.9rem;
+    max-width: 60ch;
+    margin-bottom: 1.2rem;
+  }
+  .header-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .badge {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.9);
+    font-size: 0.75rem;
+    font-family: var(--mono);
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+  }
+
+  /* ---- LAYOUT ---- */
+  .layout {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 1.8rem;
+    padding: 1.8rem 2rem 5rem;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  /* ---- SIDEBAR ---- */
+  .sidebar {
+    position: sticky;
+    top: 1.2rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1rem;
+  }
+  @media (max-width: 860px) { .sidebar { position: static; } }
+
+  .sidebar h2 {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+    margin-bottom: 0.8rem;
+  }
+
+  .nav-group {
+    border-left: 3px solid var(--line);
+    padding-left: 0.7rem;
+    margin-bottom: 0.9rem;
+  }
+  .nav-group-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    margin-bottom: 0.4rem;
+  }
+  .nav-group.web  { border-color: #1A65C8; }
+  .nav-group.mobile { border-color: #C62828; }
+  .nav-group.pdf-d { border-color: var(--warn); }
+  .nav-group.pdf-m { border-color: #388E3C; }
+
+  .nav-link {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 0.2rem 0;
+    border-radius: 4px;
+  }
+  .nav-link:hover { color: var(--accent); }
+
+  /* ---- CONTENT SECTIONS ---- */
+  .script-section {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+
+  .script-header {
+    padding: 1.2rem 1.4rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .script-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.2rem;
+  }
+  .script-header p {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    max-width: 70ch;
+  }
+
+  .type-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+  }
+  .tag-web-nv  { background: #E8F0FC; color: #1A65C8; }
+  .tag-web-v   { background: #EAF4EA; color: #2E7D32; }
+  .tag-mob-nv  { background: #FDECEA; color: #C62828; }
+  .tag-mob-v   { background: #FFF8E1; color: #C94500; }
+  .tag-pdf-dn  { background: #FDF3E3; color: #7B5700; }
+  .tag-pdf-dv  { background: #F9F3FF; color: #6B3FA0; }
+  .tag-pdf-mn  { background: #E8F5E9; color: #2E7D32; }
+  .tag-pdf-mv  { background: #FFF8E1; color: #8A3D0F; }
+
+  /* ---- CATEGORY BLOCK ---- */
+  .cat-block { border-top: 1px solid var(--line); }
+  .cat-title {
+    padding: 0.8rem 1.4rem 0.5rem;
+    font-size: 0.7rem;
+    font-family: var(--mono);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-soft);
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* ---- SR-ONLY (visível apenas para leitores de tela) ---- */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ---- TABLE ---- */
+  .table-wrap {
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+  thead th {
+    background: #F7FAF8;
+    padding: 0.65rem 0.9rem;
+    text-align: left;
+    font-size: 0.68rem;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    border-bottom: 2px solid var(--line);
+    white-space: nowrap;
+  }
+  tbody tr {
+    border-bottom: 1px solid #E8EEEB;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #F5F9F7; }
+  td {
+    padding: 0.75rem 0.9rem;
+    vertical-align: top;
+    line-height: 1.55;
+  }
+
+  /* col widths */
+  .col-item  { width: 22%; min-width: 160px; }
+  .col-como  { width: 30%; min-width: 200px; }
+  .col-wcag  { width: 16%; min-width: 130px; }
+  .col-texto { width: 32%; min-width: 220px; }
+
+  .item-text { font-weight: 500; color: var(--ink); }
+  .new22-chip {
+    display: inline-block;
+    background: var(--new22-light);
+    color: var(--new22);
+    font-size: 0.62rem;
+    font-family: var(--mono);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    margin-bottom: 0.3rem;
+  }
+
+  .wcag-tag {
+    display: inline-block;
+    background: var(--accent-light);
+    color: var(--accent-dark);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    margin: 0.1rem 0.1rem 0.1rem 0;
+    white-space: nowrap;
+  }
+
+  .text-template {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: #4A5568;
+    background: #F7F9F8;
+    border: 1px solid #E2EAE6;
+    border-radius: 5px;
+    padding: 0.5rem 0.65rem;
+    line-height: 1.5;
+  }
+
+  /* ---- LEGEND ---- */
+  .legend {
+    margin: 0 0 1.5rem;
+    padding: 0.8rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    align-items: center;
+    font-size: 0.78rem;
+  }
+  .legend-title {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    margin-right: 0.4rem;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+
+  /* ---- SKIP LINK ---- */
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    background: var(--accent-dark);
+    color: #fff;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    z-index: 9999;
+    border-radius: 0 0 var(--radius) 0;
+    text-decoration: none;
+    transition: top 0.1s;
+  }
+  .skip-link:focus {
+    top: 0;
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+  }
+
+  /* ---- TOGGLE WCAG ---- */
+  .wcag-toggle-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0 0 1.5rem;
+    padding: 0.9rem 1.1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    flex-wrap: wrap;
+  }
+  .wcag-toggle-label {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    flex: 1;
+    min-width: 180px;
+  }
+  .wcag-toggle-label strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .toggle-switch {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .toggle-switch input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .toggle-track {
+    width: 44px;
+    height: 24px;
+    background: #738C82;
+    border-radius: 12px;
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .toggle-track::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle-switch input:checked + .toggle-track {
+    background: var(--new22);
+  }
+  .toggle-switch input:checked + .toggle-track::after {
+    transform: translateX(20px);
+  }
+  .toggle-switch:focus-within .toggle-track {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .toggle-text {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    font-family: var(--mono);
+    transition: color 0.2s;
+  }
+  .toggle-switch input:checked ~ .toggle-text {
+    color: var(--new22);
+  }
+  .version-badge {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    background: #E8EEEB;
+    color: var(--ink-soft);
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+  .version-badge.active22 {
+    background: var(--new22-light);
+    color: var(--new22);
+  }
+
+  /* linhas exclusivas WCAG 2.2 — ocultas por padrão */
+  tr.row-new22 { display: none; }
+  body.wcag22-on tr.row-new22 { display: table-row; }
+
+  /* cat-block 100% 2.2 — oculto quando toggle está em 2.1 */
+  .cat-block.all-new22 { display: none; }
+  body.wcag22-on .cat-block.all-new22 { display: block; }
+
+  /* destaque visual das linhas 2.2 quando visíveis */
+  body.wcag22-on tr.row-new22 td {
+    background: #F5EEFF;
+    border-left: 3px solid var(--new22);
+    padding-left: calc(0.9rem - 3px);
+  }
+  body.wcag22-on tr.row-new22:hover td {
+    background: #EDE0FF;
+  }
+  /* título da categoria 100% 2.2 — destaque roxo sutil */
+  body.wcag22-on .cat-block.all-new22 .cat-title {
+    background: #EDE0FF;
+    color: var(--new22);
+    border-left: 3px solid var(--new22);
+    padding-left: calc(1.4rem - 3px);
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#conteudo-principal">Ir para o conteúdo principal</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-tag">QA · Acessibilidade · Itaú</div>
+    <h1>Scripts de Testes de Acessibilidade</h1>
+    <p>Todos os roteiros estruturados em formato tabular padronizado com colunas uniformes: Item do Teste, Como Testar, Diretriz WCAG Afetada e Texto Padrão para Abertura de Defeitos. Base: WCAG 2.1 — ative o toggle para exibir também os critérios da WCAG 2.2.</p>
+    <div class="header-badges">
+      <span class="badge" id="badge-versao">WCAG 2.1 — Nível A </span>
+      <span class="badge">ISO/IEC 40500:2025</span>
+      <span class="badge">PDF/UA-1 (ISO 14289-1)</span>
+      <span class="badge">Revisão Set/2026</span>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <nav class="sidebar" aria-label="Navegação dos scripts">
+    <h2>Scripts</h2>
+
+    <div class="nav-group web">
+      <p class="nav-group-label">Web Desktop</p>
+      <a class="nav-link" href="#web-nv">Não Visual</a>
+      <a class="nav-link" href="#web-v">Visual</a>
+    </div>
+    <div class="nav-group mobile">
+      <p class="nav-group-label">Mobile</p>
+      <a class="nav-link" href="#mob-nv">Não Visual</a>
+      <a class="nav-link" href="#mob-v">Visual</a>
+    </div>
+    <div class="nav-group pdf-d">
+      <p class="nav-group-label">PDF Desktop</p>
+      <a class="nav-link" href="#pdf-d-nv">Não Visual</a>
+      <a class="nav-link" href="#pdf-d-v">Visual</a>
+    </div>
+    <div class="nav-group pdf-m">
+      <p class="nav-group-label">PDF Mobile</p>
+      <a class="nav-link" href="#pdf-m-nv">Não Visual</a>
+      <a class="nav-link" href="#pdf-m-v">Visual</a>
+    </div>
+  </nav>
+
+  <main id="conteudo-principal" aria-label="Conteúdo principal — Scripts de Testes de Acessibilidade">
+    <!-- TOGGLE WCAG 2.1 / 2.2 -->
+    <div class="wcag-toggle-bar" role="group" aria-labelledby="toggle-group-label">
+      <div class="wcag-toggle-label" id="toggle-group-label">
+        <strong>Versão WCAG</strong> — Exibindo critérios da <span id="versao-texto">WCAG 2.1 (base)</span>
+      </div>
+      <div aria-live="polite" aria-atomic="true" class="sr-only" id="versao-live">Exibindo critérios da WCAG 2.1 (base)</div>
+      <label class="toggle-switch" title="Alternar entre WCAG 2.1 e WCAG 2.2">
+        <input type="checkbox" id="toggle-wcag22">
+        <span class="toggle-track"></span>
+        <span class="toggle-text" id="toggle-label">WCAG 2.2</span>
+      </label>
+      <span class="version-badge" id="version-badge" aria-hidden="true">v2.1</span>
+    </div>
+
+    <div class="legend">
+      <span class="legend-title">Legenda:</span>
+      <span class="legend-item"><span class="new22-chip">Novo 2.2</span> Critério introduzido na WCAG 2.2, não presente na versão 2.1 — visível apenas com o toggle ativado</span>
+      <span class="legend-item"><span class="wcag-tag">X.X.X</span> Número do critério de sucesso da WCAG (ex.: 1.4.3 = Princípio 1, Diretriz 4, Critério 3)</span>
+    </div>
+
+    <!-- ================================================================
+         1. SCRIPT WEB NÃO VISUAL
+    ================================================================ -->
+    <section class="script-section" id="web-nv" aria-labelledby="h2-web-nv">
+      <div class="script-header">
+        <span class="type-tag tag-web-nv">Web Desktop · Não Visual · Leitor de Tela (NVDA/JAWS)</span>
+        <h2 id="h2-web-nv">Script de Testes Não-Visuais Web Desktop</h2>
+        <p>Roteiro para validação com leitor de tela no canal internet, baseado na WCAG 2.2 (Níveis A e AA). Os textos entre colchetes devem ser substituídos conforme o contexto do teste.</p>
+      </div>
+
+      <!-- CABEÇALHOS -->
+      <div class="cat-block">
+        <h3 class="cat-title">Cabeçalhos, Títulos e Marcos</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Web Desktop — Cabeçalhos, Títulos e Marcos</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Há somente um cabeçalho nível 1 por página?</span></td>
+                <td>Navegar pelos cabeçalhos da página teclando <kbd>1</kbd> e <kbd>Shift+1</kbd> para verificar se há mais de um cabeçalho nível 1.</td>
+                <td><span class="wcag-tag">2.4.1</span> <span class="wcag-tag">2.4.6</span></td>
+                <td><div class="text-template">A página [nome_página] contém mais de um cabeçalho nível 1. Informar quais são os cabeçalhos.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">A sequência hierárquica dos cabeçalhos está organizada de forma correta?</span></td>
+                <td>Navegar pelos cabeçalhos da página teclando <kbd>H</kbd> e <kbd>Shift+H</kbd> para verificar se a sequência hierárquica está correta. A sequência deve seguir uma ordem lógica sem pular de nível (ex.: não pode pular do nível 2 para o nível 4).</td>
+                <td><span class="wcag-tag">2.4.1</span> <span class="wcag-tag">2.4.6</span></td>
+                <td><div class="text-template">A sequência hierárquica dos cabeçalhos presentes na página [nome_página] está incorreta. Informar quais são os cabeçalhos.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Os cabeçalhos não estão sendo lidos como elementos clicáveis?</span></td>
+                <td>Navegar pelos cabeçalhos da página teclando <kbd>H</kbd> e <kbd>Shift+H</kbd> para verificar se em algum deles o leitor de tela pronuncia o termo "clicável" juntamente com o texto.</td>
+                <td><span class="wcag-tag">1.3.1</span> <span class="wcag-tag">4.1.2</span></td>
+                <td><div class="text-template">Ao posicionar sobre o cabeçalho [nome_cabeçalho] utilizando o atalho H identificamos que o leitor de tela está pronunciando o termo "clicável" juntamente com o conteúdo do mesmo.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Os títulos das páginas (Insert+T) estão sendo lidos da mesma forma em que aparecem visualmente?</span></td>
+                <td>Teclar <kbd>Insert+T</kbd> e verificar se o leitor de tela lê o título da página da mesma forma em que aparece visualmente.</td>
+                <td><span class="wcag-tag">2.4.2</span></td>
+                <td><div class="text-template">O título da página [nome_página] não está sendo lido pelo leitor de tela da mesma forma em que aparece visualmente.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Os títulos das páginas (Insert+T) fazem sentido para o usuário?</span></td>
+                <td>Teclar <kbd>Insert+T</kbd> e verificar se o texto do título lido pelo leitor de tela faz sentido para o usuário.</td>
+                <td><span class="wcag-tag">2.4.2</span></td>
+                <td><div class="text-template">O título da página não faz sentido para o usuário.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Os títulos das páginas (Insert+T) não estão sendo lidos em duplicidade?</span></td>
+                <td>Teclar <kbd>Insert+T</kbd> e verificar se o título da página não está sendo lido em duplicidade pelo leitor de tela.</td>
+                <td><span class="wcag-tag">2.4.2</span></td>
+                <td><div class="text-template">O título da página está sendo lido em duplicidade pelo leitor de tela.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">A navegação pelos marcos (tecla D no NVDA / tecla R no JAWS) faz sentido para o usuário?</span></td>
+                <td>Navegar pelos marcos da página utilizando <kbd>D</kbd> ou <kbd>Shift+D</kbd> (NVDA). No JAWS, utilizar <kbd>R</kbd> ou <kbd>Shift+R</kbd> para navegar pelas regiões.</td>
+                <td><span class="wcag-tag">2.4.1</span></td>
+                <td><div class="text-template">A navegação pelos marcos [nome_marcos] não faz sentido para o leitor de tela; os marcos foram definidos em locais inadequados.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SEQUÊNCIA DE LEITURA -->
+      <div class="cat-block">
+        <h3 class="cat-title">Sequência de Leitura</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Web Desktop — Sequência de Leitura</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Os elementos da página estão sendo lidos na mesma sequência em que aparecem visualmente?</span></td>
+                <td>Navegar por todo o conteúdo da página com as setas. Navegar pelos elementos de formulário com <kbd>Tab</kbd> e atalho <kbd>F</kbd>. Navegar pelos links com <kbd>Tab</kbd> e atalhos <kbd>U</kbd> (não visitados) e <kbd>V</kbd> (visitados). Navegar pelos cabeçalhos com <kbd>H</kbd>.</td>
+                <td><span class="wcag-tag">1.3.2</span> <span class="wcag-tag">1.3.1</span> <span class="wcag-tag">2.4.3</span></td>
+                <td><div class="text-template">Descrever quais elementos estão sendo lidos pelo leitor de tela com sequência diferente do apresentado visualmente.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SEMÂNTICA -->
+      <div class="cat-block">
+        <h3 class="cat-title">Semântica</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Web Desktop — Semântica</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Os rótulos dos links e elementos de formulário estão sendo lidos da mesma forma em que aparecem visualmente?</span></td>
+                <td>Posicionar com <kbd>Tab</kbd> sobre os links e elementos de formulário e verificar se os rótulos são lidos da mesma forma em que aparecem visualmente. Textos complementares podem ser incluídos após o rótulo somente quando necessário para compreensão.</td>
+                <td><span class="wcag-tag">4.1.2</span> <span class="wcag-tag">2.5.3</span></td>
+                <td><div class="text-template">O leitor de tela não está lendo o rótulo do elemento [nome_elemento] da mesma forma em que aparece visualmente; O rótulo do elemento [nome_elemento] está sendo lido em duplicidade; O rótulo do elemento [nome_elemento] não é lido pelo leitor de tela.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Os tipos dos elementos estão sendo identificados de forma correta pelo leitor de tela?</span></td>
+                <td>Posicionar com <kbd>Tab</kbd> sobre links e elementos de formulário e verificar se os tipos são lidos corretamente. Ex.: um botão não deve ser lido como "link".</td>
+                <td><span class="wcag-tag">4.1.2</span></td>
+                <td><div class="text-template">O leitor de tela não está lendo o tipo do elemento [nome_elemento] da mesma forma em que aparece visualmente.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Os steppers descrevem com clareza as etapas do fluxo e a etapa atual?</span></td>
+                <td>Validar o conteúdo do stepper utilizando as setas, verificando se as etapas e a etapa atual são comunicadas claramente.</td>
+                <td><span class="wcag-tag">1.3.1</span></td>
+                <td><div class="text-template">Ao navegar pelo stepper utilizando as setas identificamos que o mesmo não é lido pelo leitor de tela; a informação lida no stepper não demonstra com clareza quais são as etapas do fluxo e qual é a etapa atual.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MENSAGENS DE FEEDBACK -->
+      <div class="cat-block">
+        <h3 class="cat-title">Mensagens de Feedback</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Web Desktop — Mensagens de Feedback</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Há feedback para o leitor de tela informando quando o carregamento das páginas é concluído?</span></td>
+                <td>Verificar se o leitor de tela emite feedback após o carregamento da página através da leitura automática do banner do Itaú.</td>
+                <td><span class="wcag-tag">4.1.3</span></td>
+                <td><div class="text-template">Após o carregamento da página [nome_página] identificamos que não há feedback para o leitor de tela informando que o carregamento foi concluído. Este feedback normalmente ocorre através da leitura automática do banner do Itaú.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Há feedback para o leitor de tela após o carregamento de novos conteúdos na página?</span></td>
+                <td>Verificar se o leitor de tela emite feedback após o carregamento de novos conteúdos (após Enter em botão, seleção em combo, etc.). Alertas de erro em formulários também devem ser lidos automaticamente.</td>
+                <td><span class="wcag-tag">4.1.3</span></td>
+                <td><div class="text-template">Identificamos que não há feedback para o leitor de tela informando o carregamento dos novos campos; identificamos que os alertas de erro durante o preenchimento dos campos não estão sendo lidos automaticamente pelo leitor de tela.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DIRECIONAMENTO DO FOCO -->
+      <div class="cat-block">
+        <h3 class="cat-title">Direcionamento do Foco</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Web Desktop — Direcionamento do Foco</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">O foco do leitor de tela está sendo direcionado para o topo das páginas após o carregamento (área logada)?</span></td>
+                <td>Navegar com as setas para verificar se o foco do leitor de tela foi direcionado para o topo da página após o carregamento. Válido apenas para a área logada.</td>
+                <td><span class="wcag-tag">2.4.3</span></td>
+                <td><div class="text-template">Após o carregamento da página [nome_página] identificamos que o foco do leitor de tela não está sendo direcionado para o topo da mesma. O foco do leitor de tela sempre deve ser direcionado para o topo da página após o carregamento.</div></td>
+              </tr>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> O indicador de foco visível permanece ao menos parcialmente visível quando coberto por conteúdo fixo (cabeçalho fixo, barra de cookies, banner sticky)?</span></td>
+                <td>Navegar com <kbd>Tab</kbd> por toda a página, prestando atenção em elementos próximos a cabeçalhos fixos, barras de aviso ou rodapés fixos. Rolar a página conforme necessário e verificar se o elemento focado nunca fica 100% coberto por outro conteúdo.</td>
+                <td><span class="wcag-tag">2.4.11</span></td>
+                <td><div class="text-template">Ao navegar por Tab até o elemento [nome_elemento] identificamos que o indicador de foco fica totalmente escondido atrás do elemento fixo [nome_elemento_fixo].</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TEXTOS EM IMAGENS -->
+      <div class="cat-block">
+        <h3 class="cat-title">Textos em Imagens</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Web Desktop — Textos em Imagens</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Textos contidos em imagens com informações importantes estão sendo lidos pelo leitor de tela?</span></td>
+                <td>Navegar com setas pelas imagens para verificar se o leitor de tela pronuncia os textos contidos nas mesmas.</td>
+                <td><span class="wcag-tag">1.4.5</span></td>
+                <td><div class="text-template">Ao posicionar sobre a imagem [descrição imagem] utilizando as setas identificamos que o texto contido na mesma não está sendo lido pelo leitor de tela.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TABELAS -->
+      <div class="cat-block">
+        <h3 class="cat-title">Tabelas</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Web Desktop — Tabelas</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">A quantidade de linhas e colunas informada pelo leitor de tela confere com o que é apresentado visualmente?</span></td>
+                <td>Ao entrar em uma tabela, verificar se a quantidade de linhas e colunas informada pelo leitor de tela confere com o apresentado visualmente (incluindo a linha de títulos das colunas).</td>
+                <td><span class="wcag-tag">1.3.1</span></td>
+                <td><div class="text-template">Ao entrar na tabela [nome_tabela] utilizando as setas ou o atalho T identificamos que a quantidade de linhas e colunas informada pelo leitor de tela não confere com o apresentado visualmente.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">A leitura das informações em tabelas utilizando Ctrl+Alt+Setas está correta?</span></td>
+                <td>Navegar pelas células das tabelas utilizando <kbd>Ctrl+Alt+Setas</kbd>. A navegação deve ser realizada a partir da linha que contém os títulos das colunas.</td>
+                <td><span class="wcag-tag">1.3.1</span></td>
+                <td><div class="text-template">A navegação pela tabela [nome_tabela] não faz sentido para o leitor de tela; o leitor de tela não consegue navegar por todas as células presentes na tabela.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MODAL/COACHMARK/LIGHT BOX -->
+      <div class="cat-block">
+        <h3 class="cat-title">Modal / Coachmark / Light Box</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Web Desktop — Modal / Coachmark / Light Box</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Na navegação pelo modal o foco do leitor de tela permanece sempre dentro do mesmo?</span></td>
+                <td>Tentar sair do modal utilizando setas, <kbd>Tab</kbd> e <kbd>Shift+Tab</kbd>.</td>
+                <td><span class="wcag-tag">2.4.3</span></td>
+                <td><div class="text-template">Navegando com Tab ou setas identificamos que o foco do leitor de tela está saindo do modal [nome_modal].</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">O modal contém pelo menos um cabeçalho nível 2 definido?</span></td>
+                <td>Navegar com <kbd>2</kbd> e <kbd>Shift+2</kbd> para verificar se o modal contém pelo menos um cabeçalho nível 2.</td>
+                <td><span class="wcag-tag">2.4.1</span> <span class="wcag-tag">2.4.6</span></td>
+                <td><div class="text-template">O modal [nome_modal] não tem cabeçalho nível 2 definido. Para facilitar a navegação e seguir o padrão dos demais modais do site, pedimos que o assunto principal do modal seja definido em um cabeçalho nível 2.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ELEMENTOS DE FORMULÁRIO -->
+      <div class="cat-block">
+        <h3 class="cat-title">Elementos de Formulário</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Web Desktop — Elementos de Formulário</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Os botões presentes na página estão funcionando corretamente?</span></td>
+                <td>Teclar <kbd>Enter</kbd> sobre os botões e verificar se as ações descritas nos rótulos são realizadas.</td>
+                <td><span class="wcag-tag">4.1.2</span></td>
+                <td><div class="text-template">Ao teclar Enter sobre o botão [nome_botão] identificamos que nenhuma ação é realizada.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">A navegação pelos itens presentes nos combos está correta?</span></td>
+                <td>Teclar <kbd>Tab</kbd> até o combo, em seguida teclar <kbd>Alt+Seta para baixo</kbd> e navegar pelos itens com setas.</td>
+                <td><span class="wcag-tag">1.3.1</span> <span class="wcag-tag">4.1.2</span></td>
+                <td><div class="text-template">Os itens presentes no combo [nome_combo] não são lidos pelo leitor de tela; a quantidade de itens presentes no combo [nome_combo] informada pelo leitor de tela não confere com o apresentado visualmente.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">O preenchimento dos campos de texto está correto?</span></td>
+                <td>Teclar <kbd>Tab</kbd> até o campo de texto, digitar a informação solicitada e verificar se o preenchimento está correto. Apagar o conteúdo com <kbd>Delete</kbd> e <kbd>Backspace</kbd>.</td>
+                <td><span class="wcag-tag">4.1.2</span></td>
+                <td><div class="text-template">Ao tentar inserir informação no campo [nome_campo] identificamos que o leitor de tela não está informando os caracteres digitados; ao teclar Backspace para apagar o conteúdo do campo [nome_campo] identificamos que o leitor de tela não informa quando o caractere é apagado.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Os checkboxes presentes na página estão funcionando corretamente?</span></td>
+                <td>Teclar <kbd>Barra de espaço</kbd> nos checkboxes e verificar se estão funcionando corretamente.</td>
+                <td><span class="wcag-tag">4.1.2</span></td>
+                <td><div class="text-template">Ao teclar Enter sobre o checkbox [nome_checkbox] identificamos que nenhuma ação é realizada; ao teclar Enter sobre o checkbox [nome_checkbox] identificamos que nenhuma informação é retornada pelo leitor de tela.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Os radio buttons presentes na página estão funcionando corretamente?</span></td>
+                <td>Teclar <kbd>Barra de espaço</kbd> nos radio buttons e verificar se estão funcionando corretamente.</td>
+                <td><span class="wcag-tag">4.1.2</span></td>
+                <td><div class="text-template">Ao teclar Enter sobre o radio button [nome_radio_button] identificamos que nenhuma ação é realizada; ao teclar Enter sobre o radio button [nome_radio_button] identificamos que nenhuma informação é retornada pelo leitor de tela.</div></td>
+              </tr>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Em um fluxo de várias etapas, informações já fornecidas são reaproveitadas (pré-preenchidas ou sugeridas) em vez de exigir nova digitação?</span></td>
+                <td>Percorrer um fluxo de múltiplas etapas reentrando com informação (CPF, endereço, valor) já fornecida em etapa anterior. Verificar se o campo é pré-preenchido ou oferece opção de reutilizar o dado. Exceção: casos em que reentrar é essencial à segurança (ex.: confirmação de senha).</td>
+                <td><span class="wcag-tag">3.3.7</span></td>
+                <td><div class="text-template">No fluxo [nome_fluxo], a etapa [nome_etapa] exige que o usuário digite novamente a informação [nome_informação], já fornecida anteriormente na etapa [etapa_anterior], sem oferecer reaproveitamento nem justificativa de segurança.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- NAVEGAÇÃO CONSISTENTE -->
+      <div class="cat-block">
+        <h3 class="cat-title">Navegação Consistente</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Web Desktop — Navegação Consistente</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Em páginas diferentes de um mesmo fluxo, o padrão de posicionamento dos elementos permanece o mesmo?</span></td>
+                <td>Verificar se em todas as telas do fluxo os elementos seguem o mesmo padrão de posicionamento em tela.</td>
+                <td><span class="wcag-tag">3.2.3</span></td>
+                <td><div class="text-template">Ao navegar pelas telas [nome_telas] do fluxo [nome_fluxo] identificamos que os elementos [nome_elementos] estão sendo apresentados em posições diferentes, sem seguir um padrão de posicionamento. Recomendável anexar prints de tela como evidência.</div></td>
+              </tr>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Quando a página possui mecanismo de ajuda, ele aparece na mesma posição relativa em todas as páginas do mesmo fluxo?</span></td>
+                <td>Navegar pelas diferentes páginas do fluxo com o atalho de marcos/regiões (<kbd>D</kbd> no NVDA) verificando se o mecanismo de ajuda mantém a mesma ordem relativa em relação aos demais elementos repetidos.</td>
+                <td><span class="wcag-tag">3.2.6</span></td>
+                <td><div class="text-template">Nas páginas [nome_páginas] do fluxo [nome_fluxo] identificamos que o mecanismo de ajuda [nome_mecanismo] muda de posição relativa em relação aos demais elementos da página.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- IDENTIFICAÇÃO CONSISTENTE -->
+      <div class="cat-block">
+        <h3 class="cat-title">Identificação Consistente</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Web Desktop — Identificação Consistente</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Em páginas diferentes de um mesmo fluxo, o padrão de nomenclatura dos elementos permanece o mesmo?</span></td>
+                <td>Verificar se em todas as telas do fluxo os elementos seguem o mesmo padrão de nomenclatura. Ex.: se o botão de avançar é "Continuar" na primeira tela, deve ser "Continuar" em todas, não "Avançar" em outra.</td>
+                <td><span class="wcag-tag">3.2.4</span></td>
+                <td><div class="text-template">Ao navegar pelas telas [nome_telas] do fluxo [nome_fluxo] identificamos que os elementos [nome_elementos] estão sendo definidos com nomes diferentes, sem seguir um padrão de nomenclatura. Recomendável anexar prints de tela como evidência.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- GESTOS E ALVOS -->
+      <div class="cat-block">
+        <h3 class="cat-title">Gestos e Alvos de Toque/Clique</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Web Desktop — Gestos e Alvos de Toque/Clique</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Componentes acionados por arrastar possuem alternativa operável com clique/toque único?</span></td>
+                <td>Identificar componentes com interação de arrastar (drag). Tentar realizar a mesma ação usando apenas cliques simples ou teclas de seta, sem arrastar.</td>
+                <td><span class="wcag-tag">2.5.7</span></td>
+                <td><div class="text-template">O componente [nome_componente] exige o gesto de arrastar para ser operado e não oferece uma alternativa de clique ou toque único.</div></td>
+              </tr>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Os alvos de clique têm no mínimo 24×24px CSS de área, ou espaçamento suficiente entre alvos menores?</span></td>
+                <td>Inspecionar via DevTools do navegador o tamanho (em px CSS) dos elementos interativos menores. Verificar exceções: link em texto corrido, tamanho definido pelo user agent, alternativa equivalente disponível, ou tamanho essencial.</td>
+                <td><span class="wcag-tag">2.5.8</span></td>
+                <td><div class="text-template">O elemento [nome_elemento] possui área clicável menor que 24×24px CSS, sem espaçamento suficiente em relação a alvos vizinhos e sem alternativa equivalente.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AUTENTICAÇÃO -->
+      <div class="cat-block">
+        <h3 class="cat-title">Autenticação</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Web Desktop — Autenticação</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> No login e fluxos de autenticação, é possível colar a senha, usar gerenciador de senhas, ou existe alternativa que não dependa de memorizar/transcrever informação?</span></td>
+                <td>Testar colar (<kbd>Ctrl+V</kbd>) no campo de senha; testar preenchimento automático via gerenciador de senhas do navegador. Verificar se existe alternativa biométrica/token. Se houver CAPTCHA, verificar se oferece opção sonora ou equivalente não cognitiva.</td>
+                <td><span class="wcag-tag">3.3.8</span></td>
+                <td><div class="text-template">No fluxo de login/autenticação [nome_fluxo] não é possível colar a senha e/ou não há alternativa ao teste cognitivo [nome_teste] exigido para autenticação.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         2. SCRIPT WEB VISUAL
+    ================================================================ -->
+    <section class="script-section" id="web-v" aria-labelledby="h2-web-v">
+      <div class="script-header">
+        <span class="type-tag tag-web-v">Web Desktop · Visual · Inspeção de Código + Teclado</span>
+        <h2 id="h2-web-v">Script de Testes Visuais Web Desktop</h2>
+        <p>Roteiro para testes visuais de acessibilidade na internet, baseado na WCAG 2.2 (Níveis A e AA). Inclui verificação automatizada com Axe e navegação por teclado sem leitor de tela.</p>
+      </div>
+
+      <!-- VERIFICAÇÃO AUTOMATIZADA -->
+      <div class="cat-block">
+        <h3 class="cat-title">Verificação Automatizada</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Verificação Automatizada</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Passo 1 — Inspecionar a página com a extensão Axe no Chrome</span></td>
+                <td>Analisar o relatório com a opção de boas práticas ativada (best practices: on). Considerar todos os erros, exceto: relacionados a "Elements must have sufficient color contrast"; criticidade "minor"; criticidade "unknown"; apontamentos com issue tag "wcag2aaa".</td>
+                <td><span class="wcag-tag">4.1.1</span> e todos do nível A e AA</td>
+                <td><div class="text-template">Registrar os apontamentos retornados pela ferramenta Axe, conforme critérios aplicáveis.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Passo 2 (Opcional) — Verificar apontamentos de acessibilidade no SonarQube</span></td>
+                <td>Passo opcional — alinhar com o gestor funcional. Se o projeto passar pela esteira do SonarQube, seguir os passos da página "Acessibilidade no Sonar" e verificar os apontamentos com base nas 18 regras ativas de acessibilidade.</td>
+                <td><span class="wcag-tag">1.1.1</span> <span class="wcag-tag">1.2.2</span> <span class="wcag-tag">1.3.1</span> <span class="wcag-tag">1.3.5</span> <span class="wcag-tag">2.1.1</span> <span class="wcag-tag">2.3.1</span> <span class="wcag-tag">2.4.4</span> <span class="wcag-tag">3.1.1</span> <span class="wcag-tag">4.1.2</span></td>
+                <td><div class="text-template">Registrar os apontamentos retornados pelo SonarQube, conforme as 18 regras ativas de acessibilidade.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- IDIOMA -->
+      <div class="cat-block">
+        <h3 class="cat-title">Idioma</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Idioma</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Passo 3 — O idioma da página está definido corretamente no código? E o idioma de partes em outro idioma?</span></td>
+                <td>Inspecionar o código manualmente buscando o atributo <code>&lt;html lang="pt-br"&gt;</code>. Para trechos em outro idioma, verificar o atributo <code>lang</code> no elemento específico (ex.: <code>&lt;blockquote lang="en"&gt;</code>). O atributo <code>lang</code> só deve ser usado onde o idioma difere do definido no <code>&lt;html&gt;</code>.</td>
+                <td><span class="wcag-tag">3.1.1</span></td>
+                <td><div class="text-template">O atributo de idioma &lt;html lang&gt; não está definido corretamente na página [nome_página]; o trecho [descrição_trecho] em outro idioma não possui o atributo lang correspondente.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CABEÇALHOS -->
+      <div class="cat-block">
+        <h3 class="cat-title">Cabeçalhos, Títulos e Marcos</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Cabeçalhos, Títulos e Marcos</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Passo 5 — A página possui um título que descreve seu tópico ou finalidade?</span></td>
+                <td>Inspeção visual no navegador (Chrome): verificar o título exibido como rótulo da janela/aba.</td>
+                <td><span class="wcag-tag">2.4.2</span></td>
+                <td><div class="text-template">A página [nome_página] não possui um título que descreva adequadamente seu tópico ou finalidade.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Passo 6 — Todo texto que é título ou subtítulo de seção está numa estrutura de cabeçalho (&lt;h1&gt;–&lt;h6&gt;)?</span></td>
+                <td>Inspecionar a página web via bookmarklet de cabeçalhos para verificar se títulos e subtítulos estão estruturados corretamente como elementos de cabeçalho.</td>
+                <td><span class="wcag-tag">2.4.6</span></td>
+                <td><div class="text-template">O texto [nome_texto] que aparece visualmente como título/subtítulo na página [nome_página] não está estruturado como elemento de cabeçalho (&lt;h1&gt;–&lt;h6&gt;).</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TEXTOS EM IMAGENS -->
+      <div class="cat-block">
+        <h3 class="cat-title">Textos em Imagens</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Textos em Imagens</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Passo 4 — As imagens com significado possuem atributo alt adequado? As imagens decorativas estão corretamente ocultas?</span></td>
+                <td>Inspeção de código manual. Imagens com significado devem ter atributo alt com descrição, sem aria-hidden ou role="presentation". Imagens decorativas devem ter apenas alt="" ou aria-hidden="true". Nenhuma imagem com significado deve transmitir conteúdo que poderia ser comunicado apenas por texto.</td>
+                <td><span class="wcag-tag">1.1.1</span> <span class="wcag-tag">1.4.5</span></td>
+                <td><div class="text-template">A imagem [descrição_imagem] não possui atributo alt adequado; a imagem decorativa [descrição_imagem] está sendo capturada pelo leitor de tela.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SEMÂNTICA -->
+      <div class="cat-block">
+        <h3 class="cat-title">Semântica</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Semântica</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Passo 7 — Conteúdos exibidos em formato lista estão estruturados corretamente?</span></td>
+                <td>Inspecionar a página web via bookmarklet de Lista.</td>
+                <td><span class="wcag-tag">1.3.1</span></td>
+                <td><div class="text-template">O conteúdo exibido em formato de lista na página [nome_página] não está estruturado com os elementos semânticos corretos (&lt;ul&gt;, &lt;ol&gt; ou &lt;dl&gt;).</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TABELAS -->
+      <div class="cat-block">
+        <h3 class="cat-title">Tabelas</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Tabelas</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Passo 8 — As tabelas estão dentro do elemento &lt;table&gt;, com títulos em &lt;th&gt; e dados em &lt;td&gt;?</span></td>
+                <td>Inspecionar a página via bookmarklet para verificar que as tabelas estão dentro de um elemento <code>&lt;table&gt;</code>, com títulos de colunas/linhas em <code>&lt;th&gt;</code> e itens de dados em <code>&lt;td&gt;</code>.</td>
+                <td><span class="wcag-tag">1.3.1</span></td>
+                <td><div class="text-template">A tabela [nome_tabela] na página [nome_página] não está estruturada corretamente: [descrever o problema — ex.: títulos de colunas não estão em elementos &lt;th&gt;].</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CORES E CONTRASTE -->
+      <div class="cat-block">
+        <h3 class="cat-title">Cores e Contraste</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Cores e Contraste</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Passo 9 — O contraste de textos, componentes não-textuais e uso de cores atende às proporções mínimas exigidas?</span></td>
+                <td>Texto grande (≥24px ou ≥19px bold): proporção 3:1. Texto normal (&lt;19px não bold): proporção 4,5:1. Itens não-textuais (botões, inputs, incluindo hover): proporção 3:1. Cor não deve ser o único meio de transmitir conteúdo (se usar cor, contraste mínimo 3:1 entre os itens). Usar Colour Contrast Analyser ou inspeção Chrome.</td>
+                <td><span class="wcag-tag">1.4.3</span> <span class="wcag-tag">1.4.11</span></td>
+                <td><div class="text-template">O elemento [nome_elemento] na página [nome_página] possui razão de contraste [valor_real]:1, abaixo do mínimo exigido de [valor_mínimo]:1 para [tipo de texto/componente].</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DIRECIONAMENTO DO FOCO -->
+      <div class="cat-block">
+        <h3 class="cat-title">Direcionamento do Foco</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Direcionamento do Foco</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Passo 10 — Os itens são tabuláveis e acionados por teclado? A ordem de tabulação é intuitiva? O indicador de foco é plenamente visível?</span></td>
+                <td>Navegação visual apenas via teclado, sem leitor de tela. Verificar: botões/links acionados por Enter; combos expandidos por Alt+Seta baixo; conteúdo adicional não desaparece ao mover foco; é possível percorrer a página do início ao fim com Tab e Shift+Tab; indicador de foco visível em todos os elementos tabuláveis; contexto da página não alterado repentinamente ao tabular.</td>
+                <td><span class="wcag-tag">2.1.1</span> <span class="wcag-tag">2.1.2</span> <span class="wcag-tag">2.4.3</span></td>
+                <td><div class="text-template">O elemento [nome_elemento] na página [nome_página] não é acessível via teclado / o indicador de foco não está visível / a ordem de tabulação não é lógica.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Passo 19 — Conteúdo visível apenas com hover ou foco (tooltips, menus dropdown) pode ser lido sem sair do disparador e dispensado sem mover o mouse?</span></td>
+                <td>No navegador, permanecer com o mouse/foco no conteúdo disparado para verificar se é possível ler o conteúdo sem precisar sair do disparador, e fechar com <kbd>Esc</kbd>.</td>
+                <td><span class="wcag-tag">1.4.13</span></td>
+                <td><div class="text-template">O conteúdo [nome_conteúdo] exibido ao hover/foco no elemento [nome_elemento] não pode ser dispensado sem mover o mouse/foco do disparador, ou não pode ser lido sem sair do disparador.</div></td>
+              </tr>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Passo 20 — O indicador de foco visível permanece ao menos parcialmente visível quando coberto por conteúdo fixo?</span></td>
+                <td>Navegação visual apenas via teclado, rolando a página conforme necessário nos pontos em que há elementos fixos (cabeçalho fixo, barra de cookies, banners sticky, chat flutuante).</td>
+                <td><span class="wcag-tag">2.4.11</span></td>
+                <td><div class="text-template">Ao navegar por Tab até o elemento [nome_elemento] identificamos que o indicador de foco fica totalmente escondido atrás do elemento fixo [nome_elemento_fixo].</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MULTIMÍDIA E ANIMAÇÕES -->
+      <div class="cat-block">
+        <h3 class="cat-title">Multimídia e Animações</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Multimídia e Animações</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Passo 11 — Mídias com vídeo/áudio possuem audiodescrição e legendas? Mídias apenas com vídeo possuem descrição alternativa? Mídias apenas com áudio possuem transcrição?</span></td>
+                <td>Navegar com teclado (com e sem leitor de tela, usando Chrome). Mídias com vídeo+áudio: verificar audiodescrição para conteúdo visual e legendas para conteúdo auditivo. Mídias só com vídeo: verificar descrição em texto ou áudio. Mídias só com áudio (&gt;3s): verificar transcrição descritiva. Verificar mecanismo acessível para pausar, parar e ajustar volume.</td>
+                <td><span class="wcag-tag">1.2.1</span> <span class="wcag-tag">1.2.2</span> <span class="wcag-tag">1.2.3</span></td>
+                <td><div class="text-template">A mídia [nome_mídia] na página [nome_página] não possui [audiodescrição / legendas / transcrição descritiva]; o mecanismo de controle de reprodução não é acessível por teclado/leitor de tela.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Passo 14 — Conteúdos visualmente animados podem ser pausados, parados ou ocultados? Não exibem mais que 3 flashes por segundo?</span></td>
+                <td>Navegação visual por teclado, sem leitor de tela. Verificar existência de mecanismo para pausar/parar animações e ausência de conteúdo com mais de 3 flashes por segundo.</td>
+                <td><span class="wcag-tag">2.2.2</span> <span class="wcag-tag">2.3.1</span></td>
+                <td><div class="text-template">O conteúdo animado [nome_conteúdo] na página [nome_página] não pode ser pausado, parado ou ocultado via teclado; o elemento [nome_elemento] exibe mais de 3 flashes por segundo.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ZOOM E REDIMENSIONAMENTO -->
+      <div class="cat-block">
+        <h3 class="cat-title">Zoom e Redimensionamento de Texto</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Zoom e Redimensionamento de Texto</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Passo 12 — Todo o conteúdo continua visível ao ajustar o zoom do navegador em 200%?</span></td>
+                <td>Verificação visual no navegador com zoom em 200%. Se responsiva: verificar se todo conteúdo ainda é exibido de alguma forma (mesmo que em itens expansíveis). Se não responsiva: verificar se todo conteúdo é exibido sem quebras. Todos os cantos devem ser visíveis, usando barras de rolagem se necessário.</td>
+                <td><span class="wcag-tag">1.4.4</span></td>
+                <td><div class="text-template">Ao ajustar o zoom do navegador para 200% na página [nome_página] identificamos que o conteúdo [descrição_conteúdo] não é mais visível / apresenta quebra de layout.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- GESTOS E ALVOS WEB V -->
+      <div class="cat-block">
+        <h3 class="cat-title">Gestos e Alvos de Toque/Clique</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Gestos e Alvos de Toque/Clique</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Passo 21 — Componentes acionados por arrastar possuem alternativa operável com clique único ou teclado?</span></td>
+                <td>Navegação visual apenas via teclado/mouse, testando clique único e teclas de seta como alternativa ao arraste em sliders, reordenação de listas e carrosséis com drag.</td>
+                <td><span class="wcag-tag">2.5.7</span></td>
+                <td><div class="text-template">O componente [nome_componente] exige o gesto de arrastar para ser operado e não oferece uma alternativa de clique único ou teclado.</div></td>
+              </tr>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Passo 22 — Os alvos de clique têm no mínimo 24×24px CSS de área, ou espaçamento suficiente entre alvos menores?</span></td>
+                <td>Inspeção de código/medição via DevTools do navegador (Chrome). Verificar exceções válidas: link em texto corrido, tamanho controlado pelo user agent, alternativa equivalente disponível, ou tamanho essencial à informação.</td>
+                <td><span class="wcag-tag">2.5.8</span></td>
+                <td><div class="text-template">O elemento [nome_elemento] possui área clicável menor que 24×24px CSS, sem espaçamento suficiente em relação a alvos vizinhos e sem alternativa equivalente.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FORMULÁRIOS WEB V -->
+      <div class="cat-block">
+        <h3 class="cat-title">Elementos de Formulário</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Elementos de Formulário</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Passo 15 — Ao preencher campos com conteúdo incorreto, o erro é bloqueado ou sinalizado com sugestão de correção?</span></td>
+                <td>Navegação visual por teclado, sem leitor de telas. Preencher campos com conteúdo fora do formato correto e verificar se o erro é bloqueado na digitação ou sinalizado ao submeter, com sugestão de correção.</td>
+                <td><span class="wcag-tag">2.4.6</span> <span class="wcag-tag">3.2.2</span> <span class="wcag-tag">3.3.1</span> <span class="wcag-tag">3.3.2</span> <span class="wcag-tag">3.3.4</span></td>
+                <td><div class="text-template">Ao preencher o campo [nome_campo] com conteúdo inválido na página [nome_página], o sistema não bloqueia a entrada nem exibe mensagem de erro com sugestão de correção.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Passo 16 — Os campos de formulário possuem atributos type adequados e atributo autocomplete com indicação válida?</span></td>
+                <td>Inspecionar todos os campos de formulário verificando os atributos type adequados (telefone=tel, texto=text, e-mail=email, URL=url, hora=time, data=date, senha=password) e o atributo autocomplete com indicação válida.</td>
+                <td><span class="wcag-tag">1.3.5</span></td>
+                <td><div class="text-template">O campo [nome_campo] na página [nome_página] não possui o atributo type adequado / não possui o atributo autocomplete com indicação válida.</div></td>
+              </tr>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Passo 24 — Em fluxos de várias etapas, informações já fornecidas são reaproveitadas em vez de exigir nova digitação?</span></td>
+                <td>Navegação visual percorrendo um fluxo completo de múltiplas etapas. Verificar se dados já fornecidos são pré-preenchidos ou oferecidos para seleção na próxima etapa que solicite a mesma informação. Exceção: reentrada essencial à segurança.</td>
+                <td><span class="wcag-tag">3.3.7</span></td>
+                <td><div class="text-template">No fluxo [nome_fluxo], a etapa [nome_etapa] exige que o usuário digite novamente a informação [nome_informação], já fornecida anteriormente, sem oferecer reaproveitamento nem justificativa de segurança.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MENSAGENS FEEDBACK WEB V -->
+      <div class="cat-block">
+        <h3 class="cat-title">Mensagens de Feedback</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Mensagens de Feedback</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Passo 17 — Em páginas de conclusão de fluxo com transação legal ou financeira, os dados podem ser verificados antes da confirmação?</span></td>
+                <td>Navegação visual por teclado sem leitor de tela. Verificar se existe mecanismo automático de verificação de consistência dos dados ou se os dados podem ser revisados e ajustados via teclado antes de confirmar a atualização ou transação.</td>
+                <td><span class="wcag-tag">4.1.3</span></td>
+                <td><div class="text-template">Na página de conclusão do fluxo [nome_fluxo] não há mecanismo para revisar/confirmar os dados antes do envio.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AUTENTICAÇÃO WEB V -->
+      <div class="cat-block">
+        <h3 class="cat-title">Autenticação</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Autenticação</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Passo 13 — Se houver CAPTCHA, ele é operável apenas por teclado?</span></td>
+                <td>Navegação visual por teclado sem leitor de tela no navegador Chrome. Verificar se o CAPTCHA pode ser resolvido inteiramente sem mouse.</td>
+                <td><span class="wcag-tag">1.1.1</span></td>
+                <td><div class="text-template">O CAPTCHA na página [nome_página] não é operável apenas por teclado.</div></td>
+              </tr>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Passo 25 — No login e fluxos de autenticação, é possível colar a senha, usar gerenciador de senhas, ou existe alternativa não puramente cognitiva?</span></td>
+                <td>Testar colar no campo de senha, preenchimento automático e alternativas de autenticação disponíveis no fluxo. Se houver CAPTCHA, verificar se existe alternativa não puramente cognitiva (ex.: opção sonora).</td>
+                <td><span class="wcag-tag">3.3.8</span></td>
+                <td><div class="text-template">No fluxo de login/autenticação [nome_fluxo] não é possível colar a senha e/ou não há alternativa ao teste cognitivo exigido para autenticação.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TEMPO E SESSÃO WEB V -->
+      <div class="cat-block">
+        <h3 class="cat-title">Tempo e Sessão</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Tempo e Sessão</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Passo 18 — A página não expira sem oferecer forma simples de renovar a sessão?</span></td>
+                <td>Verificação visual em um navegador. Tempo razoável para teste é 20 minutos. Caso a sessão expire, verificar se existe forma simples, rápida e acessível de renová-la.</td>
+                <td><span class="wcag-tag">2.2.5</span></td>
+                <td><div class="text-template">A página [nome_página] expira após [tempo] sem oferecer mecanismo acessível para renovar a sessão.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AJUDA WEB V -->
+      <div class="cat-block">
+        <h3 class="cat-title">Ajuda</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Web Desktop — Ajuda</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Passo 23 — Quando a página possui mecanismo de ajuda, ele aparece na mesma posição relativa em todas as páginas do mesmo fluxo?</span></td>
+                <td>Verificação visual navegando por diferentes páginas do mesmo fluxo.</td>
+                <td><span class="wcag-tag">3.2.6</span></td>
+                <td><div class="text-template">Nas páginas [nome_páginas] do fluxo [nome_fluxo] identificamos que o mecanismo de ajuda [nome_mecanismo] muda de posição relativa em relação aos demais elementos.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         3. SCRIPT MOBILE NÃO VISUAL
+    ================================================================ -->
+    <section class="script-section" id="mob-nv" aria-labelledby="h2-mob-nv">
+      <div class="script-header">
+        <span class="type-tag tag-mob-nv">Mobile · Não Visual · VoiceOver / TalkBack</span>
+        <h2 id="h2-mob-nv">Script de Testes Não-Visuais Mobile</h2>
+        <p>Roteiro para testes não visuais em aplicativos mobile, baseado na WCAG 2.2 (Níveis A e AA) interpretada para apps nativos e webviews com apoio do WCAG2ICT (W3C, out/2024).</p>
+      </div>
+
+      <!-- DIRECIONAMENTO DO FOCO MOB NV -->
+      <div class="cat-block">
+        <h3 class="cat-title">Direcionamento do Foco</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Mobile — Direcionamento do Foco</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Ao tocar pela primeira vez na funcionalidade, o foco é direcionado para o primeiro componente da tela?</span></td>
+                <td>Com o leitor de telas ativo, navegar via swipe até a funcionalidade a ser testada. Em seguida, fazer a navegação reversa (direita para esquerda) certificando-se sobre o primeiro elemento da tela.</td>
+                <td><span class="wcag-tag">1.3.2</span></td>
+                <td><div class="text-template">Ao tocar na funcionalidade [nome_funcionalidade] identificamos que o foco do leitor de telas não é direcionado para o primeiro componente da tela.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Ao tocar no botão voltar ou fechar, o foco é direcionado para a funcionalidade que ativou a tela anterior?</span></td>
+                <td>Tocar na funcionalidade indicada no escopo de testes e, em seguida, tocar no botão voltar ou fechar. Verificar se o foco retorna para a funcionalidade acionada anteriormente.</td>
+                <td><span class="wcag-tag">2.4.3</span></td>
+                <td><div class="text-template">Ao tocar no botão [voltar / fechar] identificamos que o foco do leitor de telas não é direcionado para a funcionalidade que ativou a tela anterior.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Nenhum componente da página, ao receber foco, provoca ação sem que o usuário a tenha promovido?</span></td>
+                <td>Com o leitor de telas ativo, navegar via swipe por todos os componentes da página, observando se algum provoca ação indesejada apenas ao receber foco.</td>
+                <td><span class="wcag-tag">3.2.1</span> <span class="wcag-tag">3.2.2</span></td>
+                <td><div class="text-template">Ao navegar via swipe, o componente [nome_componente] ao receber foco provoca a ação [descrição_ação] sem que o usuário a tenha acionado.</div></td>
+              </tr>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Ao navegar por swipe, o indicador de foco permanece visível/localizável mesmo quando o elemento está próximo de barras fixas (tab bar, cabeçalho fixo, bottom sheet)?</span></td>
+                <td>Com o leitor de telas ativo, navegar via swipe por elementos próximos de barras fixas na parte superior ou inferior da tela, verificando se o componente focado não fica totalmente coberto.</td>
+                <td><span class="wcag-tag">2.4.11</span></td>
+                <td><div class="text-template">Ao navegar por swipe até o componente [nome_componente] identificamos que o indicador de foco fica totalmente coberto pelo elemento fixo [nome_elemento_fixo].</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MENSAGENS DE FEEDBACK MOB NV -->
+      <div class="cat-block">
+        <h3 class="cat-title">Mensagens de Feedback</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Mobile — Mensagens de Feedback</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Ao carregar uma nova tela, o leitor de telas emite feedback para o usuário?</span></td>
+                <td>Ao tocar em qualquer link ou botão que leve a uma nova tela, adicione novos conteúdos ou abra um modal, verificar se o leitor de telas oferece feedback ao carregar a tela (reproduzindo o nome do componente de acordo com o direcionamento do foco).</td>
+                <td><span class="wcag-tag">4.1.3</span></td>
+                <td><div class="text-template">Ao carregar a tela [nome_tela] após acionar o elemento [nome_elemento] identificamos que o leitor de telas não oferece feedback ao usuário.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- IDIOMA MOB NV -->
+      <div class="cat-block">
+        <h3 class="cat-title">Idioma</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Mobile — Idioma</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">O idioma da funcionalidade testada está definido corretamente?</span></td>
+                <td>Verificar se nas configurações de idioma do leitor de telas o idioma está definido para português automático. Após confirmar, navegar via swipe pela página para verificar se o idioma está correto.</td>
+                <td><span class="wcag-tag">3.1.1</span></td>
+                <td><div class="text-template">Ao navegar via swipe pela tela [nome_tela] identificamos que o idioma não está definido corretamente para português, fazendo o leitor de telas trocar de sintetizador indevidamente.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">O idioma das partes da funcionalidade em outro idioma estão definidos corretamente?</span></td>
+                <td>Com o idioma do leitor de telas configurado para português automático, navegar via swipe verificando se partes em outro idioma estão com o dialeto definido por código.</td>
+                <td><span class="wcag-tag">3.1.2</span></td>
+                <td><div class="text-template">Ao navegar pela tela [nome_tela] identificamos que o trecho [descrição_trecho] em idioma estrangeiro não está com o idioma definido por código, fazendo o leitor trocar de sintetizador indevidamente.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CABEÇALHOS MOB NV -->
+      <div class="cat-block">
+        <h3 class="cat-title">Cabeçalhos, Títulos e Marcos</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Mobile — Cabeçalhos, Títulos e Marcos</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">A tela possui um título principal que indica o objetivo da funcionalidade?</span></td>
+                <td>Com o leitor de telas ativo, validar se a tela carregada possui um título principal que deixe clara a finalidade da funcionalidade.</td>
+                <td><span class="wcag-tag">2.4.2</span></td>
+                <td><div class="text-template">A tela [nome_tela] não possui um título principal que indique claramente o objetivo da funcionalidade.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">A hierarquia dos cabeçalhos está correta?</span></td>
+                <td>Utilizar o rotor do leitor de telas, selecionar a opção "títulos" e verificar a hierarquia dos cabeçalhos na tela. O cabeçalho de nível 1 deve ser único. Obs.: hierarquia de cabeçalhos não se aplica em interfaces nativas.</td>
+                <td><span class="wcag-tag">1.3.2</span> <span class="wcag-tag">2.4.6</span></td>
+                <td><div class="text-template">A hierarquia dos cabeçalhos na tela [nome_tela] está incorreta: [descrever o problema, ex.: cabeçalho nível 1 duplicado ou sequência de níveis incorreta].</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SEMÂNTICA MOB NV -->
+      <div class="cat-block">
+        <h3 class="cat-title">Semântica</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Mobile — Semântica</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Os componentes da tela possuem rótulos?</span></td>
+                <td>Navegar via swipe na tela verificando se todos os componentes (links, botões, cabeçalhos, inputs) possuem rótulos associados, com sentido para o usuário e no idioma da página.</td>
+                <td><span class="wcag-tag">4.1.2</span></td>
+                <td><div class="text-template">O componente [nome_componente] na tela [nome_tela] não possui rótulo, ou o rótulo não faz sentido para a navegação.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">O rótulo faz sentido para o usuário e confere com a verificação visual?</span></td>
+                <td>Em teste em dupla, validar se o rótulo traz sentido para a navegação e se o que o leitor de telas reproduz confere com o que o par visual está vendo na tela.</td>
+                <td><span class="wcag-tag">1.3.1</span> <span class="wcag-tag">2.5.3</span></td>
+                <td><div class="text-template">O rótulo do componente [nome_componente] lido pelo leitor de telas na tela [nome_tela] não corresponde ao texto exibido visualmente.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">A tela não contém instruções baseadas apenas em características sensoriais (cor, forma, tamanho, posição, som)?</span></td>
+                <td>Verificar se existem instruções como "clique no botão verde", "clique no botão abaixo" ou "ao ouvir o bip". Qualquer instrução não deve depender apenas de forma, tamanho, localização visual ou som.</td>
+                <td><span class="wcag-tag">1.3.3</span></td>
+                <td><div class="text-template">A tela [nome_tela] contém a instrução "[descrição_instrução]" que depende exclusivamente de característica sensorial [cor / forma / localização / som] para ser compreendida.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Os links da tela descrevem corretamente seu direcionamento?</span></td>
+                <td>Com o leitor de telas ativo, validar se os links na tela descrevem corretamente seu direcionamento, seja no rótulo do link ou no contexto em seu entorno.</td>
+                <td><span class="wcag-tag">2.4.4</span></td>
+                <td><div class="text-template">O link [nome_link] na tela [nome_tela] não descreve seu direcionamento de forma clara, seja pelo rótulo ou pelo contexto no entorno.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SEQUÊNCIA MOB NV -->
+      <div class="cat-block">
+        <h3 class="cat-title">Sequência de Leitura</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Mobile — Sequência de Leitura</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">O leitor de telas reproduz os componentes na mesma ordem em que estão posicionados visualmente?</span></td>
+                <td>Em teste em dupla, validar se o leitor de telas reproduz os componentes na mesma ordem que estão posicionados visualmente.</td>
+                <td><span class="wcag-tag">1.3.2</span></td>
+                <td><div class="text-template">Na tela [nome_tela] o leitor de telas reproduz o componente [nome_componente] em ordem diferente da apresentada visualmente.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- IMAGENS MOB NV -->
+      <div class="cat-block">
+        <h3 class="cat-title">Textos em Imagens</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Mobile — Textos em Imagens</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Imagens relevantes possuem texto alternativo? Imagens decorativas são ignoradas pelo leitor de telas?</span></td>
+                <td>Com o leitor de telas ativo, validar se imagens com relevância à navegação possuem texto alternativo. Imagens meramente ilustrativas devem ser ocultas para usuários de leitor de telas.</td>
+                <td><span class="wcag-tag">1.1.1</span></td>
+                <td><div class="text-template">A imagem [descrição_imagem] na tela [nome_tela] não possui texto alternativo / a imagem meramente decorativa [descrição_imagem] está sendo capturada pelo leitor de telas.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MULTIMÍDIA MOB NV -->
+      <div class="cat-block">
+        <h3 class="cat-title">Multimídia</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Mobile — Multimídia</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Vídeos pré-gravados possuem audiodescrição ou transcrição? Áudios possuem transcrição?</span></td>
+                <td>Verificar a existência do conteúdo alternativo: audiodescrição/transcrição para vídeos e transcrição para áudios pré-gravados. Verificar se existe mecanismo acessível para pausar, parar e ajustar o volume.</td>
+                <td><span class="wcag-tag">1.2.1</span> <span class="wcag-tag">1.2.2</span> <span class="wcag-tag">1.2.3</span> <span class="wcag-tag">1.2.5</span></td>
+                <td><div class="text-template">A mídia [nome_mídia] na tela [nome_tela] não possui [audiodescrição / transcrição]; o mecanismo de controle de reprodução não é acessível pelo leitor de telas.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Se houver áudio tocando por mais de 3 segundos, existe mecanismo para pausar, silenciar ou ajustar o volume?</span></td>
+                <td>Com o leitor de telas ativo, carregar a funcionalidade observando a existência de áudio que toque por mais de 3 segundos. Verificar existência de mecanismo de controle.</td>
+                <td><span class="wcag-tag">1.4.2</span></td>
+                <td><div class="text-template">A tela [nome_tela] possui áudio tocando automaticamente por mais de 3 segundos sem oferecer mecanismo acessível para pausar, silenciar ou ajustar o volume.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Componentes com movimento automático por mais de 5 segundos possuem mecanismo para parar, pausar ou ocultar?</span></td>
+                <td>Com o leitor de telas ativo, verificar se a tela possui componentes em movimento automático por mais de 5 segundos (ex.: cards, vídeos). Verificar se existe mecanismo para parar, pausar ou ocultar.</td>
+                <td><span class="wcag-tag">2.2.2</span></td>
+                <td><div class="text-template">O componente [nome_componente] na tela [nome_tela] fica em movimento automático por mais de 5 segundos sem oferecer mecanismo para parar, pausar ou ocultar esta movimentação.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FORMULÁRIOS MOB NV -->
+      <div class="cat-block">
+        <h3 class="cat-title">Elementos de Formulário</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Mobile — Elementos de Formulário</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Os inputs dos formulários têm objetivo de entrada claramente definido (teclado correto para cada tipo de campo)?</span></td>
+                <td>Com o leitor de telas ativo, verificar se campos de e-mail disponibilizam os caracteres @ e . ao lado da barra de espaços. Validar se campos de data e telefone permitem apenas a inserção de números.</td>
+                <td><span class="wcag-tag">1.3.5</span></td>
+                <td><div class="text-template">O campo [nome_campo] na tela [nome_tela] não apresenta o teclado adequado ao seu objetivo de entrada.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">As labels estão devidamente associadas aos seus respectivos inputs?</span></td>
+                <td>Com o leitor de telas ativo, navegar com swipe pelos inputs verificando se as labels estão associadas e identificam claramente o campo.</td>
+                <td><span class="wcag-tag">3.3.2</span></td>
+                <td><div class="text-template">A label do campo [nome_campo] na tela [nome_tela] não está associada ao input correspondente.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Em formulários com dados jurídicos, financeiros ou alteração de dados, existe opção de cancelar ou confirmar antes do envio?</span></td>
+                <td>Com o leitor de telas ativo, verificar se existe opção para cancelar ou confirmar a verificação dos dados antes do envio em formulários de responsabilidade jurídica, transações financeiras ou alteração de dados existentes.</td>
+                <td><span class="wcag-tag">3.3.4</span></td>
+                <td><div class="text-template">O formulário [nome_formulário] na tela [nome_tela] não oferece opção para cancelar ou revisar os dados antes do envio em operação de [tipo: jurídica / financeira / alteração de dados].</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">As mensagens de erro são claras e indicam o que e como corrigir?</span></td>
+                <td>Com o leitor de telas ativo, preencher o formulário com dados incorretos e verificar se as mensagens de erro são claras e indicam o que deve ser corrigido.</td>
+                <td><span class="wcag-tag">3.3.1</span> <span class="wcag-tag">3.3.3</span></td>
+                <td><div class="text-template">A mensagem de erro do campo [nome_campo] na tela [nome_tela] não é clara ou não indica como corrigir o preenchimento.</div></td>
+              </tr>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Em um fluxo de várias etapas, informações já fornecidas são reaproveitadas em vez de exigir nova digitação?</span></td>
+                <td>Percorrer um fluxo de múltiplas telas reentrando com uma informação (CPF, endereço, valor) já fornecida antes. Verificar se o campo vem pré-preenchido ou com opção de reutilizar o dado. Exceção: reentrada essencial à segurança.</td>
+                <td><span class="wcag-tag">3.3.7</span></td>
+                <td><div class="text-template">No fluxo [nome_fluxo], a tela [nome_tela] exige que o usuário redigite a informação [nome_informação] já fornecida na tela [tela_anterior], sem oferecer reaproveitamento nem justificativa de segurança.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- GESTOS MOB NV -->
+      <div class="cat-block">
+        <h3 class="cat-title">Gestos e Interação por Toque</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Mobile — Gestos e Interação por Toque</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Todas as funcionalidades são acessíveis via swipe ou dois toques ao selecionar?</span></td>
+                <td>Em teste em dupla, com o leitor de telas ativo, validar se é possível acionar todas as funcionalidades via swipe.</td>
+                <td><span class="wcag-tag">2.1.1</span></td>
+                <td><div class="text-template">O componente [nome_componente] na tela [nome_tela] não é acessível via swipe com o leitor de telas ativo.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">A funcionalidade não exige movimentações complexas (ex.: gestos com múltiplos dedos)?</span></td>
+                <td>Com o leitor de telas ativo, navegar pela funcionalidade verificando se em alguma parte do fluxo existem movimentações complexas (ex.: deslize com 3 dedos para baixo, giro com dois dedos).</td>
+                <td><span class="wcag-tag">2.5.1</span></td>
+                <td><div class="text-template">A tela [nome_tela] exige o gesto complexo [descrição_gesto] sem oferecer alternativa simples para realizar a mesma ação.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">É possível desfazer ou reverter ações promovidas por toque simples?</span></td>
+                <td>Com o leitor de telas ativo, verificar se é possível desfazer uma ação acionada por toque simples (ex.: confirmar solicitação, prosseguir com cadastro, enviar código).</td>
+                <td><span class="wcag-tag">2.5.2</span></td>
+                <td><div class="text-template">Após acionar o elemento [nome_elemento] por toque simples na tela [nome_tela], não é possível cancelar ou reverter a ação executada.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Se a funcionalidade exige agitar o dispositivo para promover ação, existe alternativa e opção de desativar?</span></td>
+                <td>Com o leitor de telas ativo, verificar se a funcionalidade exige que o usuário agite a tela para promover ação (ex.: "agitar para desfazer").</td>
+                <td><span class="wcag-tag">2.5.4</span></td>
+                <td><div class="text-template">A funcionalidade [nome_funcionalidade] exige agitar o dispositivo para promover a ação [descrição_ação], sem oferecer mecanismo alternativo ou opção de desativar este gesto.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">É possível navegar por todos os componentes via swipe sem nenhum tipo de bloqueio?</span></td>
+                <td>Com o leitor de telas ativo, validar se é possível acionar e voltar por todos os componentes sem nenhum tipo de bloqueio de navegação.</td>
+                <td><span class="wcag-tag">2.1.2</span></td>
+                <td><div class="text-template">Ao navegar por swipe até o componente [nome_componente] na tela [nome_tela] identificamos que o leitor de telas fica preso e não consegue avançar/voltar.</div></td>
+              </tr>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Funcionalidades acionadas por arrastar possuem alternativa operável com toque único?</span></td>
+                <td>Identificar componentes com interação de arrastar (sliders, reordenação de listas, cards). Com o leitor de telas ativo, verificar se é possível realizar a mesma ação por duplo toque, botões ou ações do rotor, sem precisar arrastar.</td>
+                <td><span class="wcag-tag">2.5.7</span></td>
+                <td><div class="text-template">O componente [nome_componente] na tela [nome_tela] exige o gesto de arrastar e não oferece alternativa de toque único para realizar a mesma ação.</div></td>
+              </tr>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Os alvos de toque têm no mínimo 24×24pt de área, ou espaçamento suficiente entre alvos menores?</span></td>
+                <td>Em teste em dupla, pedir ao par visual para medir ou estimar visualmente o tamanho dos elementos tocáveis menores. Verificar exceções válidas: link em texto corrido, tamanho controlado pelo sistema, alternativa equivalente, ou tamanho essencial.</td>
+                <td><span class="wcag-tag">2.5.8</span></td>
+                <td><div class="text-template">O elemento [nome_elemento] na tela [nome_tela] possui área de toque menor que 24×24pt, sem espaçamento suficiente em relação aos alvos vizinhos e sem alternativa equivalente.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- NAVEGAÇÃO CONSISTENTE MOB NV -->
+      <div class="cat-block">
+        <h3 class="cat-title">Navegação Consistente</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Mobile — Navegação Consistente</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">A funcionalidade possui mais de uma forma para localizar determinado conteúdo?</span></td>
+                <td>Com o leitor de telas ativo, tentar localizar conteúdo existente na tela por campo de busca ou menu de opções.</td>
+                <td><span class="wcag-tag">2.4.5</span></td>
+                <td><div class="text-template">A tela [nome_tela] não oferece formas alternativas (campo de busca ou menu) para localizar o conteúdo [descrição_conteúdo].</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Se a tela possui muitas informações repetidas, existe mecanismo para ignorar blocos?</span></td>
+                <td>Com o leitor de telas ativo, validar se a tela possui muitas informações repetidas. Se houver, verificar se existe mecanismo (skip links ou estrutura hierárquica correta) para ignorar blocos repetidos.</td>
+                <td><span class="wcag-tag">2.4.1</span></td>
+                <td><div class="text-template">A tela [nome_tela] possui blocos repetidos sem mecanismo (skip links ou estrutura hierárquica) que permita ao usuário ignorá-los.</div></td>
+              </tr>
+              <tr>
+                <td><span class="item-text">Componentes iguais com mesma funcionalidade estão posicionados no mesmo local em telas diferentes?</span></td>
+                <td>Com o leitor de telas ativo, validar se componentes iguais (ex.: tabbar, header, footer) estão posicionados na mesma região em telas diferentes do mesmo aplicativo.</td>
+                <td><span class="wcag-tag">3.2.3</span></td>
+                <td><div class="text-template">O componente [nome_componente] está posicionado em regiões diferentes nas telas [nome_telas] do mesmo aplicativo.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TEMPO E SESSÃO MOB NV -->
+      <div class="cat-block">
+        <h3 class="cat-title">Tempo e Sessão</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Mobile — Tempo e Sessão</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">Se a funcionalidade possui limite de tempo, existe opção para ajustar ou interromper a progressão?</span></td>
+                <td>Com o leitor de telas ativo, verificar a existência de limite de tempo no fluxo. Se houver, verificar se existe opção para desligar ou ajustar o limite. Exceção: quando o tempo é essencial.</td>
+                <td><span class="wcag-tag">2.2.1</span></td>
+                <td><div class="text-template">A tela [nome_tela] possui limite de tempo de [valor] sem oferecer opção para ajustar ou interromper a progressão do tempo.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AJUDA MOB NV -->
+      <div class="cat-block">
+        <h3 class="cat-title">Ajuda</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Mobile — Ajuda</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="item-text">O aplicativo possui mecanismo de ajuda (telefone, e-mail, chat, formulário de contato)?</span></td>
+                <td>Com o leitor de telas ativo, verificar se a aplicação possui mecanismos de ajuda acessíveis por leitor de telas.</td>
+                <td><span class="wcag-tag">3.2.6</span></td>
+                <td><div class="text-template">O aplicativo [nome_aplicativo] não possui mecanismo de ajuda acessível para o caso do usuário não conseguir completar o fluxo [nome_fluxo].</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AUTENTICAÇÃO MOB NV -->
+      <div class="cat-block">
+        <h3 class="cat-title">Autenticação</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Não-Visuais Mobile — Autenticação</caption>
+                        <thead>
+              <tr>
+                <th class="col-item">Item do Teste</th>
+                <th class="col-como">Como Testar</th>
+                <th class="col-wcag">Diretriz WCAG Afetada</th>
+                <th class="col-texto">Texto Padrão para Abertura de Defeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-new22">
+                <td><span class="item-text"><span class="new22-chip">Novo 2.2</span> O processo de login/autenticação oferece alternativa a testes puramente cognitivos (memorizar senha, transcrever captcha)?</span></td>
+                <td>Com o leitor de telas ativo, verificar se é possível colar a senha, usar preenchimento automático/gerenciador de senhas, ou autenticar por biometria/token. Se houver CAPTCHA, verificar se existe alternativa não puramente cognitiva.</td>
+                <td><span class="wcag-tag">3.3.8</span></td>
+                <td><div class="text-template">No fluxo de login/autenticação [nome_fluxo] não é possível colar a senha e/ou não há alternativa ao teste cognitivo [nome_teste] exigido para autenticação.</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         4. SCRIPT MOBILE VISUAL
+         (Formato compacto — sem coluna texto padrão no original, 
+          padronizado com texto genérico)
+    ================================================================ -->
+    <section class="script-section" id="mob-v" aria-labelledby="h2-mob-v">
+      <div class="script-header">
+        <span class="type-tag tag-mob-v">Mobile · Visual · Inspeção com VoiceOver / TalkBack</span>
+        <h2 id="h2-mob-v">Script de Testes Visuais Mobile</h2>
+        <p>Roteiro para testes visuais de acessibilidade em aplicativos mobile, baseado na WCAG 2.2 (Níveis A e AA) com apoio do WCAG2ICT.</p>
+      </div>
+
+      <div class="cat-block">
+        <h3 class="cat-title">Verificação Automatizada</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Mobile — Verificação Automatizada</caption>
+                        <thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead>
+            <tbody>
+              <tr><td><span class="item-text">Passo opcional — Verificar apontamentos de acessibilidade no SonarQube (se aplicável para webview)</span></td><td>Se o projeto for web/webview e passar pela esteira do SonarQube, seguir os passos da página "Acessibilidade no Sonar" e verificar os apontamentos com base nas 18 regras ativas.</td><td><span class="wcag-tag">1.1.1</span> <span class="wcag-tag">1.2.2</span> <span class="wcag-tag">1.3.1</span> <span class="wcag-tag">1.3.5</span> <span class="wcag-tag">2.1.1</span> <span class="wcag-tag">2.3.1</span> <span class="wcag-tag">2.4.4</span> <span class="wcag-tag">3.1.1</span> <span class="wcag-tag">4.1.2</span></td><td><div class="text-template">Registrar os apontamentos retornados pelo SonarQube conforme as regras ativas de acessibilidade.</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cat-block">
+        <h3 class="cat-title">Cabeçalhos, Títulos e Marcos</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Mobile — Cabeçalhos, Títulos e Marcos</caption>
+                        <thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead>
+            <tbody>
+              <tr><td><span class="item-text">Todo texto que é título ou subtítulo de seção está em estrutura de cabeçalho?</span></td><td>Dar swipe no título da tela para verificar se o leitor de telas o identifica como cabeçalho.</td><td><span class="wcag-tag">2.4.6</span></td><td><div class="text-template">O texto [nome_texto] exibido visualmente como título/subtítulo na tela [nome_tela] não está estruturado como cabeçalho.</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cat-block">
+        <h3 class="cat-title">Textos em Imagens</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Mobile — Textos em Imagens</caption>
+                        <thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead>
+            <tbody>
+              <tr><td><span class="item-text">Imagens com significado possuem texto alternativo? Imagens decorativas são ignoradas pelo leitor?</span></td><td>Navegação visual por swipe com VoiceOver ou TalkBack. Verificar se imagens relevantes são descritas e se imagens decorativas não recebem foco.</td><td><span class="wcag-tag">1.1.1</span> <span class="wcag-tag">1.4.5</span></td><td><div class="text-template">A imagem [descrição_imagem] na tela [nome_tela] não possui texto alternativo / imagem decorativa está sendo capturada pelo leitor de telas.</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cat-block">
+        <h3 class="cat-title">Cores e Contraste</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Mobile — Cores e Contraste</caption>
+                        <thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead>
+            <tbody>
+              <tr><td><span class="item-text">O contraste de textos e componentes não-textuais atende às proporções mínimas? A cor não é o único meio de transmitir informação?</span></td><td>Texto pequeno (normal &lt;18pt ou bold &lt;14pt): 4,5:1. Texto grande (normal ≥18pt ou bold ≥14pt): 3:1. Itens não-textuais (botões, inputs): 3:1. Solicitar a cor ao desenvolvedor ou UX. Tirar print e analisar com ferramentas de contraste como último recurso. Em telas webview Android/iOS idênticas, basta testar em um SO.</td><td><span class="wcag-tag">1.4.3</span> <span class="wcag-tag">1.4.11</span></td><td><div class="text-template">O elemento [nome_elemento] na tela [nome_tela] possui razão de contraste [valor_real]:1, abaixo do mínimo exigido de [valor_mínimo]:1.</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cat-block">
+        <h3 class="cat-title">Direcionamento do Foco</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Mobile — Direcionamento do Foco</caption>
+                        <thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead>
+            <tbody>
+              <tr class="row-new22"><td><span class="item-text">O foco visual acompanha o foco do leitor de tela? Os componentes são identificados de forma consistente e na mesma ordem das outras telas?</span></td><td>Navegar por gestos pela tela observando se o foco visual acompanha o foco do leitor de tela. Analisar se os componentes são identificados de forma consistente.</td><td><span class="wcag-tag">2.1.1</span> <span class="wcag-tag">2.1.2</span> <span class="wcag-tag">2.4.3</span></td><td><div class="text-template">Na tela [nome_tela] o foco visual não acompanha o foco do leitor de telas / os componentes são identificados de forma inconsistente em relação às outras telas do aplicativo.</div></td></tr>
+              <tr><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> O elemento em foco permanece ao menos parcialmente visível quando próximo de barras fixas?</span></td><td>Navegar com VoiceOver/TalkBack por elementos próximos a componentes fixos (tab bar, cabeçalho, bottom sheet), observando se o item focado nunca fica 100% coberto.</td><td><span class="wcag-tag">2.4.11</span></td><td><div class="text-template">Ao navegar por swipe até o elemento [nome_elemento] na tela [nome_tela] identificamos que o indicador de foco fica totalmente coberto pelo elemento fixo [nome_elemento_fixo].</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cat-block">
+        <h3 class="cat-title">Multimídia e Animações</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Mobile — Multimídia e Animações</caption>
+                        <thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead>
+            <tbody>
+              <tr><td><span class="item-text">Mídias possuem os recursos de acessibilidade exigidos (audiodescrição, legendas, transcrição, controle de volume)?</span></td><td>Navegação visual por swipe com VoiceOver ou TalkBack. Verificar audiodescrição/legendas para vídeos e transcrições para áudios. Verificar mecanismo de controle de reprodução e volume.</td><td><span class="wcag-tag">1.2.1</span> <span class="wcag-tag">1.2.2</span> <span class="wcag-tag">1.2.3</span></td><td><div class="text-template">A mídia [nome_mídia] na tela [nome_tela] não possui [audiodescrição / legendas / transcrição / mecanismo de controle de reprodução].</div></td></tr>
+              <tr><td><span class="item-text">Conteúdos visualmente animados podem ser pausados, parados ou ocultados? Não exibem mais que 3 flashes por segundo?</span></td><td>Navegação visual por swipe com VoiceOver ou TalkBack. Verificar existência de mecanismo para pausar/parar animações e ausência de mais de 3 flashes por segundo.</td><td><span class="wcag-tag">2.3.3</span></td><td><div class="text-template">O conteúdo animado [nome_conteúdo] na tela [nome_tela] não pode ser pausado, parado ou ocultado / exibe mais de 3 flashes por segundo.</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cat-block">
+        <h3 class="cat-title">Gestos e Alvos de Toque</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Mobile — Gestos e Alvos de Toque</caption>
+                        <thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead>
+            <tbody>
+              <tr class="row-new22"><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Componentes acionados por arrastar possuem alternativa operável com toque único?</span></td><td>Identificar componentes com interação de arrastar e testar se há alternativa (botões, duplo toque) que realiza a mesma ação sem arrastar. Navegação visual e por toque, sem leitor de telas.</td><td><span class="wcag-tag">2.5.7</span></td><td><div class="text-template">O componente [nome_componente] na tela [nome_tela] exige o gesto de arrastar e não oferece alternativa de toque único.</div></td></tr>
+              <tr><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Os alvos de toque têm no mínimo 24×24pt de área, ou espaçamento suficiente entre alvos menores?</span></td><td>Medir ou estimar visualmente o tamanho dos elementos tocáveis menores. Verificar exceções válidas: link em texto corrido, tamanho controlado pelo sistema, alternativa equivalente, ou tamanho essencial.</td><td><span class="wcag-tag">2.5.8</span></td><td><div class="text-template">O elemento [nome_elemento] na tela [nome_tela] possui área de toque menor que 24×24pt, sem espaçamento suficiente e sem alternativa equivalente.</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cat-block">
+        <h3 class="cat-title">Elementos de Formulário</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Mobile — Elementos de Formulário</caption>
+                        <thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead>
+            <tbody>
+              <tr class="row-new22"><td><span class="item-text">Ao preencher campos com conteúdo incorreto, o erro é bloqueado ou sinalizado com sugestão de correção?</span></td><td>Navegação visual sem leitor de telas. Preencher campos com conteúdo fora do formato correto e verificar se é bloqueado ou se há mensagem de erro com sugestão de correção.</td><td><span class="wcag-tag">2.4.6</span> <span class="wcag-tag">3.2.2</span> <span class="wcag-tag">3.3.1</span> <span class="wcag-tag">3.3.2</span> <span class="wcag-tag">3.3.4</span></td><td><div class="text-template">Ao preencher o campo [nome_campo] com conteúdo inválido na tela [nome_tela], o sistema não bloqueia a entrada nem exibe mensagem de erro com sugestão de correção.</div></td></tr>
+              <tr><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Em fluxos de várias etapas, informações já fornecidas são reaproveitadas em vez de exigir nova digitação?</span></td><td>Percorrer um fluxo de múltiplas telas reentrando com informação já fornecida antes. Verificar se o campo é pré-preenchido ou reutilizável. Exceção: reentrada essencial à segurança.</td><td><span class="wcag-tag">3.3.7</span></td><td><div class="text-template">No fluxo [nome_fluxo], a tela [nome_tela] exige que o usuário redigite a informação [nome_informação] já fornecida anteriormente, sem oferecer reaproveitamento nem justificativa de segurança.</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cat-block">
+        <h3 class="cat-title">Mensagens de Feedback</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Mobile — Mensagens de Feedback</caption>
+                        <thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead>
+            <tbody>
+              <tr><td><span class="item-text">Em páginas de conclusão com transação legal ou financeira, os dados podem ser revisados antes da confirmação?</span></td><td>Navegação visual sem leitor de tela. Verificar se existe mecanismo para revisar/confirmar os dados antes do envio final.</td><td><span class="wcag-tag">4.1.3</span></td><td><div class="text-template">Na tela de conclusão do fluxo [nome_fluxo] não há mecanismo para revisar/confirmar os dados antes do envio.</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cat-block">
+        <h3 class="cat-title">Autenticação</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Mobile — Autenticação</caption>
+                        <thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead>
+            <tbody>
+              <tr class="row-new22"><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> O login/autenticação oferece alternativa a testes puramente cognitivos?</span></td><td>Verificar se é possível colar senha, usar preenchimento automático, ou autenticar por biometria/token. Testar alternativas a eventuais CAPTCHAs.</td><td><span class="wcag-tag">3.3.8</span></td><td><div class="text-template">No fluxo de autenticação [nome_fluxo] não é possível colar a senha e/ou não há alternativa ao teste cognitivo exigido para autenticação.</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cat-block">
+        <h3 class="cat-title">Tempo e Sessão</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Mobile — Tempo e Sessão</caption>
+                        <thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead>
+            <tbody>
+              <tr><td><span class="item-text">O app não expira sem oferecer forma simples de renovar a sessão?</span></td><td>Verificação visual no app. Tempo razoável para teste é 20 minutos. Se expirar, verificar se provê forma simples, rápida e acessível de renovar a sessão.</td><td><span class="wcag-tag">2.2.5</span></td><td><div class="text-template">O aplicativo expira a sessão após [tempo] sem oferecer mecanismo acessível para renovar a sessão na tela [nome_tela].</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cat-block">
+        <h3 class="cat-title">Ajuda</h3>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Script de Testes Visuais Mobile — Ajuda</caption>
+                        <thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead>
+            <tbody>
+              <tr class="row-new22"><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Quando existe mecanismo de ajuda, ele aparece na mesma posição relativa em todas as telas do mesmo fluxo?</span></td><td>Percorrer visualmente as diferentes telas do fluxo verificando a posição do mecanismo de ajuda.</td><td><span class="wcag-tag">3.2.6</span></td><td><div class="text-template">O mecanismo de ajuda [nome_mecanismo] muda de posição relativa entre as telas [nome_telas] do fluxo [nome_fluxo].</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         5. SCRIPT PDF DESKTOP NÃO VISUAL
+    ================================================================ -->
+    <section class="script-section" id="pdf-d-nv" aria-labelledby="h2-pdf-d-nv">
+      <div class="script-header">
+        <span class="type-tag tag-pdf-dn">PDF Desktop · Não Visual · NVDA/JAWS</span>
+        <h2 id="h2-pdf-d-nv">Script de Testes Não-Visuais em PDF no Desktop</h2>
+        <p>Roteiro para testes de acessibilidade com leitor de tela em arquivos PDF desktop, baseado na WCAG 2.2 (Níveis A e AA) e no padrão PDF/UA-1 (ISO 14289-1). Para checagem automatizada complementar, utilizar o PAC (PDF Accessibility Checker).</p>
+      </div>
+
+      <div class="cat-block"><h3 class="cat-title">Cabeçalhos, Títulos e Marcos</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Desktop — Cabeçalhos, Títulos e Marcos</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Há somente um cabeçalho nível 1 por documento?</span></td><td>Navegar pelos cabeçalhos do documento teclando <kbd>1</kbd> e <kbd>Shift+1</kbd> para verificar se há mais de um cabeçalho nível 1.</td><td><span class="wcag-tag">2.4.1</span> <span class="wcag-tag">2.4.6</span></td><td><div class="text-template">O documento [nome_documento] contém mais de um cabeçalho nível 1. Informar quais são os cabeçalhos.</div></td></tr>
+        <tr><td><span class="item-text">A sequência hierárquica dos cabeçalhos está organizada de forma correta?</span></td><td>Navegar pelos cabeçalhos teclando <kbd>H</kbd> e <kbd>Shift+H</kbd> para verificar se a sequência está correta e não pula níveis.</td><td><span class="wcag-tag">2.4.1</span> <span class="wcag-tag">2.4.6</span></td><td><div class="text-template">A sequência hierárquica dos cabeçalhos no documento [nome_documento] está incorreta. Informar quais são os cabeçalhos.</div></td></tr>
+        <tr><td><span class="item-text">O título do documento PDF (Insert+T) está sendo lido da mesma forma em que aparece visualmente?</span></td><td>Teclar <kbd>Insert+T</kbd> e verificar se o leitor de tela lê o título do documento da mesma forma em que aparece visualmente.</td><td><span class="wcag-tag">2.4.2</span></td><td><div class="text-template">O título do documento PDF [nome_documento] não está sendo lido pelo leitor de tela da mesma forma em que aparece visualmente.</div></td></tr>
+        <tr><td><span class="item-text">O título do documento PDF (Insert+T) faz sentido para o usuário?</span></td><td>Teclar <kbd>Insert+T</kbd> e verificar se o texto do título lido faz sentido para o usuário.</td><td><span class="wcag-tag">2.4.2</span></td><td><div class="text-template">O título do documento PDF não faz sentido para o usuário.</div></td></tr>
+        <tr><td><span class="item-text">O título do documento PDF (Insert+T) não está sendo lido em duplicidade?</span></td><td>Teclar <kbd>Insert+T</kbd> e verificar se o título não está sendo lido em duplicidade.</td><td><span class="wcag-tag">2.4.2</span></td><td><div class="text-template">O título do documento PDF está sendo lido em duplicidade pelo leitor de tela.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Sequência de Leitura</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Desktop — Sequência de Leitura</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Os elementos do documento estão sendo lidos na mesma sequência em que aparecem visualmente?</span></td><td>Navegar por todo o conteúdo com setas. Navegar pelos elementos de formulário com <kbd>Tab</kbd> e atalho <kbd>F</kbd>. Navegar pelos links com <kbd>Tab</kbd> e atalho <kbd>K</kbd>. Navegar pelos cabeçalhos com <kbd>H</kbd>.</td><td><span class="wcag-tag">1.3.2</span> <span class="wcag-tag">1.3.1</span> <span class="wcag-tag">2.4.3</span></td><td><div class="text-template">Descrever quais elementos estão sendo lidos com sequência diferente do apresentado visualmente.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Semântica</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Desktop — Semântica</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Os rótulos dos links e elementos de formulário estão sendo lidos da mesma forma em que aparecem visualmente?</span></td><td>Posicionar com <kbd>Tab</kbd> sobre links e elementos de formulário e verificar se os rótulos são lidos da mesma forma em que aparecem visualmente.</td><td><span class="wcag-tag">4.1.2</span></td><td><div class="text-template">O leitor de tela não está lendo o rótulo do elemento [nome_elemento] da mesma forma que aparece visualmente; o rótulo está sendo lido em duplicidade; o rótulo do elemento [nome_elemento] não é lido pelo leitor de tela.</div></td></tr>
+        <tr><td><span class="item-text">Os tipos dos elementos estão sendo identificados de forma correta pelo leitor de tela?</span></td><td>Posicionar com <kbd>Tab</kbd> sobre links e elementos de formulário verificando se os tipos são lidos corretamente (ex.: botão não deve ser lido como link).</td><td><span class="wcag-tag">1.3.1</span></td><td><div class="text-template">O leitor de tela não está lendo o tipo do elemento [nome_elemento] da forma correta; está sendo lido como [tipo_incorreto] em vez de [tipo_correto].</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Validação de Imagens</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Desktop — Validação de Imagens</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Textos contidos em imagens com informações importantes estão sendo lidos pelo leitor de tela?</span></td><td>Navegar com setas pelas imagens para verificar se o leitor de tela pronuncia os textos contidos nas mesmas.</td><td><span class="wcag-tag">1.4.5</span></td><td><div class="text-template">Ao posicionar sobre a imagem [descrição_imagem] identificamos que o texto contido na mesma não está sendo lido pelo leitor de tela.</div></td></tr>
+        <tr><td><span class="item-text">Imagens relevantes têm texto alternativo? Imagens ilustrativas são ignoradas pelo leitor de tela?</span></td><td>Juntamente com o par visual validar se imagens meramente ilustrativas são ignoradas pelo leitor de tela e se imagens relevantes têm texto alternativo que as descreve.</td><td><span class="wcag-tag">1.1.1</span></td><td><div class="text-template">A imagem [descrição_imagem] não possui texto alternativo ou possui texto alternativo que não a descreve; a imagem meramente ilustrativa [descrição_imagem] está sendo capturada pelo leitor de tela.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Tabelas</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Desktop — Tabelas</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">A quantidade de linhas e colunas informada pelo leitor de tela confere com o apresentado visualmente?</span></td><td>Ao entrar em uma tabela, verificar se a quantidade de linhas e colunas informada pelo leitor de tela confere com o apresentado visualmente (incluindo a linha de títulos das colunas).</td><td><span class="wcag-tag">1.3.1</span></td><td><div class="text-template">Ao entrar na tabela [nome_tabela] identificamos que a quantidade de linhas e colunas informada pelo leitor de tela não confere com o apresentado visualmente.</div></td></tr>
+        <tr><td><span class="item-text">A leitura das informações em tabelas utilizando Ctrl+Alt+Setas está correta?</span></td><td>Navegar pelas células das tabelas utilizando <kbd>Ctrl+Alt+Setas</kbd>, a partir da linha com títulos das colunas.</td><td><span class="wcag-tag">1.3.1</span></td><td><div class="text-template">A navegação pela tabela [nome_tabela] não faz sentido para o leitor de tela; o leitor de tela não consegue navegar por todas as células presentes na tabela.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Elementos de Formulário</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Desktop — Elementos de Formulário</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Os botões presentes no documento estão funcionando corretamente?</span></td><td>Teclar <kbd>Enter</kbd> sobre os botões e verificar se as ações descritas nos rótulos são realizadas.</td><td><span class="wcag-tag">4.1.2</span></td><td><div class="text-template">Ao teclar Enter sobre o botão [nome_botão] identificamos que nenhuma ação é realizada.</div></td></tr>
+        <tr><td><span class="item-text">A navegação pelos itens presentes nos combos está correta?</span></td><td>Teclar <kbd>Tab</kbd> até o combo, em seguida teclar <kbd>Alt+Seta para baixo</kbd> e navegar pelos itens com setas (avaliar quando houver combos em PDF se essa é a melhor forma de validar).</td><td><span class="wcag-tag">1.3.1</span> <span class="wcag-tag">4.1.2</span></td><td><div class="text-template">Os itens presentes no combo [nome_combo] não são lidos pelo leitor de tela; a quantidade de itens no combo informada pelo leitor de tela não confere com o apresentado visualmente.</div></td></tr>
+        <tr><td><span class="item-text">O preenchimento dos campos de texto está correto?</span></td><td>Teclar <kbd>Tab</kbd> até o campo, digitar a informação e verificar se o preenchimento está correto. Apagar o conteúdo com <kbd>Delete</kbd> e <kbd>Backspace</kbd>.</td><td><span class="wcag-tag">4.1.2</span></td><td><div class="text-template">Ao inserir informação no campo [nome_campo] identificamos que o leitor de tela não informa os caracteres digitados; ao teclar Backspace identificamos que o leitor de tela não informa quando o caractere é apagado.</div></td></tr>
+        <tr><td><span class="item-text">Os checkboxes presentes no documento estão funcionando corretamente?</span></td><td>Teclar <kbd>Barra de espaço</kbd> nos checkboxes e verificar se funcionam corretamente.</td><td><span class="wcag-tag">4.1.2</span></td><td><div class="text-template">Ao teclar Enter sobre o checkbox [nome_checkbox] identificamos que nenhuma ação é realizada / nenhuma informação é retornada pelo leitor de tela.</div></td></tr>
+        <tr class="row-new22"><td><span class="item-text">Os radio buttons presentes no documento estão funcionando corretamente?</span></td><td>Teclar <kbd>Barra de espaço</kbd> nos radio buttons e verificar se funcionam corretamente.</td><td><span class="wcag-tag">4.1.2</span></td><td><div class="text-template">Ao teclar Enter sobre o radio button [nome_radio_button] identificamos que nenhuma ação é realizada / nenhuma informação é retornada pelo leitor de tela.</div></td></tr>
+        <tr><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Em formulários PDF de múltiplas páginas, informações já fornecidas são reaproveitadas em vez de exigir nova digitação?</span></td><td>Preencher um campo em uma página do formulário e verificar, ao avançar para a página seguinte que solicite a mesma informação, se ela é reaproveitada automaticamente. Exceção: reentrada essencial à segurança.</td><td><span class="wcag-tag">3.3.7</span></td><td><div class="text-template">No documento [nome_documento], o campo [nome_campo] exige nova digitação de uma informação já fornecida anteriormente no mesmo formulário.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Navegação Consistente</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Desktop — Navegação Consistente</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr class="row-new22"><td><span class="item-text">Em páginas diferentes de um mesmo documento, o padrão de posicionamento dos elementos permanece o mesmo?</span></td><td>Verificar se em todas as páginas os elementos (ex.: número de página, logomarca) seguem o mesmo padrão de posicionamento.</td><td><span class="wcag-tag">3.2.3</span></td><td><div class="text-template">Ao navegar pelas páginas [nome_páginas] do documento [nome_documento] identificamos que os elementos [nome_elementos] estão sendo apresentados em posições diferentes. Recomendável anexar prints como evidência.</div></td></tr>
+        <tr><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Quando o documento possui mecanismo de ajuda, ele aparece na mesma posição relativa em todas as páginas em que está presente?</span></td><td>Navegar pelas diferentes páginas do documento verificando se o mecanismo de ajuda mantém a mesma ordem relativa em relação aos demais elementos repetidos.</td><td><span class="wcag-tag">3.2.6</span></td><td><div class="text-template">No documento [nome_documento] identificamos que o mecanismo de ajuda [nome_mecanismo] muda de posição relativa entre as páginas.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Idioma</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Desktop — Idioma</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">O idioma do documento está definido corretamente?</span></td><td>Verificar se nas configurações do leitor de telas o idioma está definido para português automático. Após confirmação, navegar via seta pelo documento para verificar se o idioma está correto.</td><td><span class="wcag-tag">3.1.1</span></td><td><div class="text-template">Ao navegar pelo documento [nome_documento] identificamos que o idioma não está definido como português, fazendo o leitor de telas trocar de sintetizador indevidamente.</div></td></tr>
+        <tr><td><span class="item-text">As palavras em outro idioma estão com o idioma definido corretamente?</span></td><td>Com o idioma configurado para português automático, navegar via seta pelas palavras em outro idioma e verificar se a leitura está correta.</td><td><span class="wcag-tag">3.1.2</span></td><td><div class="text-template">Ao navegar pelo documento [nome_documento] identificamos que a palavra [nome_palavra] não está com o idioma definido corretamente, fazendo o leitor de telas pronunciá-la de forma errada.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Autenticação</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Desktop — Autenticação</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr class="row-new22"><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Quando o formulário PDF exige autenticação (senha para assinatura), existe alternativa que não dependa exclusivamente de memorizar ou transcrever informação?</span></td><td>Verificar se é possível colar a senha no campo de autenticação do PDF e se há alternativa não puramente cognitiva quando aplicável.</td><td><span class="wcag-tag">3.3.8</span></td><td><div class="text-template">No documento [nome_documento] não é possível colar a senha e/ou não há alternativa ao teste cognitivo exigido para acesso.</div></td></tr>
+      </tbody></table></div></div>
+    </section>
+
+    <!-- ================================================================
+         6. SCRIPT PDF DESKTOP VISUAL
+    ================================================================ -->
+    <section class="script-section" id="pdf-d-v" aria-labelledby="h2-pdf-d-v">
+      <div class="script-header">
+        <span class="type-tag tag-pdf-dv">PDF Desktop · Visual · Inspeção de Código + NVDA</span>
+        <h2 id="h2-pdf-d-v">Script de Testes Visuais em PDF no Desktop</h2>
+        <p>Roteiro para testes visuais de acessibilidade em arquivos PDF desktop, baseado na WCAG 2.2 (Níveis A e AA) e PDF/UA-1 (ISO 14289-1).</p>
+      </div>
+
+      <div class="cat-block"><h3 class="cat-title">Cores e Contraste</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Desktop — Cores e Contraste</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Passo 1 — O contraste de textos e componentes não-textuais atende às proporções mínimas?</span></td><td>Texto grande (≥24px ou ≥19px bold): 3:1. Texto normal (&lt;19px não bold): 4,5:1. Itens não-textuais (botões, inputs): 3:1. Usar Colour Contrast Analyser. Para validar tamanho da fonte: usar NVDA, selecionar o texto e <kbd>Insert+F</kbd> (retorno sonoro; usar exibidor de fala para visualização).</td><td><span class="wcag-tag">1.4.3</span> <span class="wcag-tag">1.4.11</span></td><td><div class="text-template">O elemento [nome_elemento] no documento [nome_documento] possui razão de contraste [valor_real]:1, abaixo do mínimo exigido de [valor_mínimo]:1 para [tipo de texto/componente].</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Cabeçalhos, Títulos e Marcos</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Desktop — Cabeçalhos, Títulos e Marcos</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Passo 2 — Todo texto que é título ou subtítulo de seção está em estrutura de cabeçalho (&lt;h1&gt;–&lt;h6&gt;)?</span></td><td>Navegação com os atalhos de cabeçalho do NVDA.</td><td><span class="wcag-tag">2.4.6</span></td><td><div class="text-template">O texto [nome_texto] exibido visualmente como título/subtítulo no documento [nome_documento] não está estruturado como elemento de cabeçalho.</div></td></tr>
+        <tr><td><span class="item-text">Passo 3 — O documento possui um título (em Propriedades) que descreve seu tópico ou finalidade?</span></td><td>Com leitor de tela: <kbd>Insert+T</kbd>. Sem leitor de tela: Arquivo &gt; Propriedades &gt; Descrição &gt; verificar o campo "Título".</td><td><span class="wcag-tag">2.4.2</span></td><td><div class="text-template">O documento [nome_documento] não possui um título nas propriedades que descreva adequadamente seu tópico ou finalidade.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Textos em Imagens</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Desktop — Textos em Imagens</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Passo 7 — Imagens relevantes possuem texto alternativo que as descreve? Imagens decorativas são ignoradas pelo leitor de tela? Nenhuma imagem com significado usa apenas texto?</span></td><td>Navegação com os atalhos de imagem do NVDA.</td><td><span class="wcag-tag">1.1.1</span> <span class="wcag-tag">1.4.5</span></td><td><div class="text-template">A imagem [descrição_imagem] no documento [nome_documento] não possui texto alternativo ou possui texto que não a descreve adequadamente; imagem decorativa está sendo capturada pelo leitor de tela.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Semântica</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Desktop — Semântica</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Passo 5 — Conteúdos exibidos em formato lista estão estruturados corretamente?</span></td><td>Navegação com os atalhos de lista do NVDA.</td><td><span class="wcag-tag">1.3.1</span></td><td><div class="text-template">O conteúdo exibido em formato de lista no documento [nome_documento] não está estruturado corretamente como elemento de lista.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Tabelas</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Desktop — Tabelas</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Passo 6 — As tabelas estão estruturadas corretamente, com quantidade de linhas/colunas correta e cabeçalhos associados às células?</span></td><td>Navegação com os atalhos de tabela do NVDA. Validar se a quantidade de linhas e colunas confere com a verificação visual e se os cabeçalhos das colunas são lidos e associados ao navegar pelas células.</td><td><span class="wcag-tag">1.3.1</span></td><td><div class="text-template">A tabela [nome_tabela] no documento [nome_documento] não está estruturada corretamente: [descrever o problema — ex.: quantidade de linhas/colunas incorreta ou cabeçalhos não associados às células].</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Direcionamento do Foco</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Desktop — Direcionamento do Foco</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr class="row-new22"><td><span class="item-text">Passo 4 — Os itens são tabuláveis e acionados por teclado? A ordem de tabulação é intuitiva? O indicador de foco é plenamente visível?</span></td><td>Navegação visual apenas via teclado sem leitor de tela. Verificar: botões e links acionados por Enter; varredura de Tab e Shift+Tab do início ao fim; indicador de foco visível em todos os elementos tabuláveis.</td><td><span class="wcag-tag">2.1.1</span> <span class="wcag-tag">2.1.2</span> <span class="wcag-tag">2.4.3</span></td><td><div class="text-template">O elemento [nome_elemento] no documento [nome_documento] não é acessível via teclado / o indicador de foco não está visível / a ordem de tabulação não é lógica.</div></td></tr>
+        <tr><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Passo 8 — O indicador de foco visível permanece ao menos parcialmente visível quando coberto por painéis fixos do leitor de PDF?</span></td><td>Navegação visual apenas via teclado no Adobe Reader, observando elementos próximos à barra de ferramentas e painel lateral.</td><td><span class="wcag-tag">2.4.11</span></td><td><div class="text-template">Ao navegar por Tab até o elemento [nome_elemento] no documento [nome_documento] identificamos que o indicador de foco fica totalmente escondido atrás de [barra de ferramentas / painel lateral].</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Ajuda</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Desktop — Ajuda</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr class="row-new22"><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Passo 9 — Quando o documento possui mecanismo de ajuda, ele aparece na mesma posição relativa em todas as páginas em que está presente?</span></td><td>Verificação visual navegando por diferentes páginas do documento.</td><td><span class="wcag-tag">3.2.6</span></td><td><div class="text-template">No documento [nome_documento] identificamos que o mecanismo de ajuda [nome_mecanismo] muda de posição relativa entre as páginas.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Autenticação</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Desktop — Autenticação</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr class="row-new22"><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Passo 10 — Quando o formulário PDF exige autenticação, é possível colar a senha e existe alternativa não cognitiva?</span></td><td>Testar colar no campo de senha/autenticação do PDF.</td><td><span class="wcag-tag">3.3.8</span></td><td><div class="text-template">No documento [nome_documento] não é possível colar a senha no campo de autenticação e/ou não há alternativa não cognitiva para o processo de autenticação.</div></td></tr>
+      </tbody></table></div></div>
+    </section>
+
+    <!-- ================================================================
+         7. SCRIPT PDF MOBILE NÃO VISUAL
+    ================================================================ -->
+    <section class="script-section" id="pdf-m-nv" aria-labelledby="h2-pdf-m-nv">
+      <div class="script-header">
+        <span class="type-tag tag-pdf-mn">PDF Mobile · Não Visual · VoiceOver / TalkBack</span>
+        <h2 id="h2-pdf-m-nv">Script de Testes Não-Visuais em PDF no Mobile</h2>
+        <p>Roteiro para testes de acessibilidade com leitor de tela em arquivos PDF em dispositivos mobile, baseado na WCAG 2.2 (Níveis A e AA) e PDF/UA-1 (ISO 14289-1).</p>
+      </div>
+
+      <div class="cat-block"><h3 class="cat-title">Idioma</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Mobile — Idioma</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">O idioma do documento está definido corretamente?</span></td><td>Verificar se nas configurações do leitor de telas o idioma está definido para português automático. Após confirmação, navegar via seta pelo documento para verificar se o idioma está correto.</td><td><span class="wcag-tag">3.1.1</span></td><td><div class="text-template">Ao navegar pelo documento [nome_documento] identificamos que o idioma não está definido como português, fazendo o leitor de telas trocar de sintetizador indevidamente.</div></td></tr>
+        <tr><td><span class="item-text">As palavras em outro idioma estão com o idioma definido corretamente?</span></td><td>Com o idioma configurado para português automático, navegar via seta pelas palavras em outro idioma verificando se a leitura está correta.</td><td><span class="wcag-tag">3.1.2</span></td><td><div class="text-template">Ao navegar pelo documento [nome_documento] identificamos que a palavra [nome_palavra] não está com o idioma definido corretamente, fazendo o leitor de telas pronunciá-la de forma errada.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Cabeçalhos, Títulos e Marcos</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Mobile — Cabeçalhos, Títulos e Marcos</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">O documento possui um título principal que indica claramente a sua finalidade?</span></td><td>Com o leitor de telas ativo, validar se o documento possui um título principal que deixe claro a sua finalidade.</td><td><span class="wcag-tag">2.4.2</span></td><td><div class="text-template">O documento [nome_documento] não possui um título principal que indique claramente a sua finalidade.</div></td></tr>
+        <tr><td><span class="item-text">A hierarquia dos cabeçalhos está correta?</span></td><td>Utilizar o rotor do leitor de telas selecionando a opção "títulos" e verificar a hierarquia dos cabeçalhos. O cabeçalho de nível 1 deve ser único.</td><td><span class="wcag-tag">1.3.1</span></td><td><div class="text-template">A hierarquia dos cabeçalhos no documento [nome_documento] está incorreta: [descrever o problema].</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Semântica</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Mobile — Semântica</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Os componentes do documento possuem rótulos?</span></td><td>Navegar via swipe no documento verificando se todos os componentes (links, botões, inputs) possuem rótulos associados que façam sentido para o usuário.</td><td><span class="wcag-tag">4.1.2</span></td><td><div class="text-template">O componente [nome_componente] no documento [nome_documento] não possui rótulo ou o rótulo não faz sentido para a navegação.</div></td></tr>
+        <tr><td><span class="item-text">O rótulo faz sentido para o usuário e confere com a verificação visual?</span></td><td>Em teste em dupla, validar se o rótulo traz sentido para a navegação e se o que o leitor de telas reproduz confere com o que o par visual está vendo.</td><td><span class="wcag-tag">1.3.1</span> <span class="wcag-tag">2.5.3</span></td><td><div class="text-template">O rótulo do componente [nome_componente] lido pelo leitor de telas no documento [nome_documento] não corresponde ao texto exibido visualmente.</div></td></tr>
+        <tr><td><span class="item-text">O documento não contém instruções baseadas apenas em características sensoriais?</span></td><td>Verificar se existem instruções que dependam exclusivamente de forma, tamanho, localização visual ou cor (ex.: "clique no botão verde", "os itens em azul").</td><td><span class="wcag-tag">1.3.3</span></td><td><div class="text-template">O documento [nome_documento] contém a instrução "[descrição_instrução]" que depende exclusivamente de característica sensorial [cor / forma / localização / som].</div></td></tr>
+        <tr><td><span class="item-text">Os links do documento descrevem corretamente seu direcionamento?</span></td><td>Com o leitor de telas ativo, validar se os links descrevem seu direcionamento, seja no rótulo ou no contexto no entorno.</td><td><span class="wcag-tag">2.4.4</span></td><td><div class="text-template">O link [nome_link] no documento [nome_documento] não descreve seu direcionamento de forma clara, seja pelo rótulo ou pelo contexto no entorno.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Textos em Imagens</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Mobile — Textos em Imagens</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Imagens com relevância possuem texto alternativo? Imagens decorativas são ignoradas pelo leitor de telas?</span></td><td>Com o leitor de telas ativo, validar se imagens relevantes possuem texto alternativo. Imagens meramente ilustrativas devem ser ocultas para usuários de leitor de telas.</td><td><span class="wcag-tag">1.1.1</span></td><td><div class="text-template">A imagem [descrição_imagem] no documento [nome_documento] não possui texto alternativo / a imagem decorativa está sendo capturada pelo leitor de telas.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Elementos de Formulário</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Mobile — Elementos de Formulário</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr class="row-new22"><td><span class="item-text">Os rótulos dos campos são claros e há instruções para o preenchimento (ex.: formato dos dados esperados)?</span></td><td>Com o leitor de telas ativo, navegar com swipe pelos inputs verificando se as labels/instruções são claras e estão associadas corretamente.</td><td><span class="wcag-tag">3.3.2</span> <span class="wcag-tag">1.3.1</span></td><td><div class="text-template">O campo [nome_campo] no documento [nome_documento] não possui label clara ou instrução de preenchimento associada.</div></td></tr>
+        <tr><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Em formulários PDF de múltiplas páginas, informações já fornecidas são reaproveitadas em vez de exigir nova digitação?</span></td><td>Preencher um campo em uma página e verificar, ao avançar para a página seguinte que solicite a mesma informação, se ela é reaproveitada. Exceção: reentrada essencial à segurança.</td><td><span class="wcag-tag">3.3.7</span></td><td><div class="text-template">No documento [nome_documento], o campo [nome_campo] exige nova digitação de uma informação já fornecida anteriormente no mesmo formulário, sem oferecer reaproveitamento nem justificativa de segurança.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Gestos e Interação</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Mobile — Gestos e Interação</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Todas as funcionalidades são acessíveis via swipe ou dois toques ao selecionar?</span></td><td>Em teste em dupla, com o leitor de telas ativo, validar se é possível acionar todas as funcionalidades do documento via swipe.</td><td><span class="wcag-tag">2.1.1</span></td><td><div class="text-template">O elemento [nome_elemento] no documento [nome_documento] não é acessível via swipe com o leitor de telas ativo.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Direcionamento do Foco</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Mobile — Direcionamento do Foco</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr class="row-new22"><td><span class="item-text">É possível navegar por todos os componentes via swipe sem nenhum tipo de bloqueio?</span></td><td>Com o leitor de telas ativo, validar se é possível acionar e voltar por todos os componentes sem nenhum tipo de bloqueio de navegação.</td><td><span class="wcag-tag">2.1.2</span></td><td><div class="text-template">Ao navegar por swipe no documento [nome_documento] identificamos que o foco fica preso no elemento [nome_elemento] e não consegue avançar/voltar.</div></td></tr>
+        <tr><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> O indicador de foco/leitura permanece localizável quando o elemento está próximo de elementos fixos do app de leitura de PDF?</span></td><td>Com o leitor de telas ativo, navegar via swipe por elementos próximos a barras fixas do visualizador de PDF, observando se o item em foco nunca fica totalmente coberto.</td><td><span class="wcag-tag">2.4.11</span></td><td><div class="text-template">Ao navegar por swipe no documento [nome_documento], o elemento [nome_elemento] fica totalmente coberto pela barra fixa [nome_barra] do visualizador de PDF.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Navegação Consistente</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Mobile — Navegação Consistente</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">O documento possui mais de uma forma para localizar determinado conteúdo?</span></td><td>Com o leitor de telas ativo, tentar localizar conteúdo existente procurando por índice, cabeçalhos e gestos de troca de página.</td><td><span class="wcag-tag">2.4.5</span> <span class="wcag-tag">2.4.1</span></td><td><div class="text-template">O documento [nome_documento] não oferece formas alternativas (índice, cabeçalhos, gestos de página) para localizar o conteúdo [descrição_conteúdo].</div></td></tr>
+        <tr><td><span class="item-text">Componentes iguais com mesma funcionalidade estão posicionados no mesmo local em páginas diferentes?</span></td><td>Com o leitor de telas ativo, validar se componentes iguais (ex.: numeração, logo) estão posicionados na mesma região em páginas diferentes do mesmo documento.</td><td><span class="wcag-tag">3.2.3</span></td><td><div class="text-template">O componente [nome_componente] está posicionado em regiões diferentes nas páginas [nome_páginas] do documento [nome_documento].</div></td></tr>
+        <tr class="row-new22"><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Quando o documento possui mecanismo de ajuda, ele aparece na mesma posição relativa em todas as páginas em que está presente?</span></td><td>Navegar pelas diferentes páginas do documento verificando a posição do mecanismo de ajuda em relação aos demais elementos.</td><td><span class="wcag-tag">3.2.6</span></td><td><div class="text-template">No documento [nome_documento] o mecanismo de ajuda [nome_mecanismo] muda de posição relativa entre as páginas em que aparece.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Autenticação</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Não-Visuais em PDF no Mobile — Autenticação</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr class="row-new22"><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Quando o documento exige autenticação, existe alternativa que não dependa exclusivamente de memorizar ou transcrever informação?</span></td><td>Verificar se é possível colar a senha no campo de autenticação e se há alternativa não puramente cognitiva quando aplicável.</td><td><span class="wcag-tag">3.3.8</span></td><td><div class="text-template">No documento [nome_documento] não é possível colar a senha no campo de autenticação e/ou não há alternativa não cognitiva para o processo de autenticação.</div></td></tr>
+      </tbody></table></div></div>
+    </section>
+
+    <!-- ================================================================
+         8. SCRIPT PDF MOBILE VISUAL
+    ================================================================ -->
+    <section class="script-section" id="pdf-m-v" aria-labelledby="h2-pdf-m-v">
+      <div class="script-header">
+        <span class="type-tag tag-pdf-mv">PDF Mobile · Visual · Inspeção com VoiceOver / TalkBack</span>
+        <h2 id="h2-pdf-m-v">Script de Testes Visuais em PDF no Mobile</h2>
+        <p>Roteiro para testes visuais de acessibilidade em arquivos PDF em dispositivos mobile, baseado na WCAG 2.2 (Níveis A e AA) e PDF/UA-1 (ISO 14289-1).</p>
+      </div>
+
+      <div class="cat-block"><h3 class="cat-title">Cores e Contraste</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Mobile — Cores e Contraste</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Passo 1 — O contraste de textos e componentes não-textuais atende às proporções mínimas?</span></td><td>Texto pequeno (normal &lt;18pt ou bold &lt;14pt): 4,5:1. Texto grande (normal ≥18pt ou bold ≥14pt): 3:1. Componentes não-textuais: 3:1. PDF que não abre dentro do app: enviar por e-mail e usar Colour Contrast Analyser. PDF que abre no app: solicitar a cor/tamanho ao desenvolvedor ou UX, ou tirar print como último recurso.</td><td><span class="wcag-tag">1.4.3</span> <span class="wcag-tag">1.4.11</span></td><td><div class="text-template">O elemento [nome_elemento] no documento [nome_documento] possui razão de contraste [valor_real]:1, abaixo do mínimo exigido de [valor_mínimo]:1.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Cabeçalhos, Títulos e Marcos</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Mobile — Cabeçalhos, Títulos e Marcos</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Passo 2 — Todo texto que é título ou subtítulo de seção está em estrutura de cabeçalho?</span></td><td>Dar swipe no título da tela ou usar o gesto de navegação por títulos do leitor de telas.</td><td><span class="wcag-tag">2.4.6</span></td><td><div class="text-template">O texto [nome_texto] exibido visualmente como título/subtítulo no documento [nome_documento] não está estruturado como cabeçalho.</div></td></tr>
+        <tr><td><span class="item-text">Passo 3 — O documento possui um título (em Propriedades) que descreve seu tópico ou finalidade?</span></td><td>Seguir a rota: Arquivo &gt; Propriedades &gt; Descrição &gt; verificar campo "Título".</td><td><span class="wcag-tag">2.4.2</span></td><td><div class="text-template">O documento [nome_documento] não possui um título nas propriedades que descreva adequadamente seu tópico ou finalidade.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Textos em Imagens</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Mobile — Textos em Imagens</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Passo 5 — Imagens relevantes possuem texto alternativo? Imagens decorativas são ignoradas pelo leitor?</span></td><td>Navegação visual por swipe com VoiceOver ou TalkBack. Verificar se imagens relevantes possuem texto alternativo e se imagens decorativas não recebem foco.</td><td><span class="wcag-tag">1.1.1</span> <span class="wcag-tag">1.4.5</span></td><td><div class="text-template">A imagem [descrição_imagem] no documento [nome_documento] não possui texto alternativo / imagem decorativa está sendo capturada pelo leitor de telas.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Semântica</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Mobile — Semântica</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Passo 6 — Conteúdos exibidos em formato lista estão estruturados corretamente?</span></td><td>Navegação visual por swipe com VoiceOver ou TalkBack.</td><td><span class="wcag-tag">1.3.1</span></td><td><div class="text-template">O conteúdo exibido em formato de lista no documento [nome_documento] não está estruturado corretamente como elemento de lista.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Tabelas</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Mobile — Tabelas</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr><td><span class="item-text">Passo 7 — As tabelas estão estruturadas corretamente, com quantidade de linhas/colunas correta e cabeçalhos associados às células?</span></td><td>Navegação visual por swipe com VoiceOver ou TalkBack. Validar se a quantidade de linhas e colunas confere e se os cabeçalhos das colunas são lidos e associados ao navegar pelas células.</td><td><span class="wcag-tag">1.3.1</span></td><td><div class="text-template">A tabela [nome_tabela] no documento [nome_documento] não está estruturada corretamente: [descrever o problema].</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Direcionamento do Foco</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Mobile — Direcionamento do Foco</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr class="row-new22"><td><span class="item-text">Passo 4 — A ordem do foco segue uma lógica sequencial?</span></td><td>Navegação visual por swipe com VoiceOver ou TalkBack, observando se o foco visual segue uma ordem lógica e sequencial.</td><td><span class="wcag-tag">2.4.3</span></td><td><div class="text-template">No documento [nome_documento], a ordem de foco ao navegar por swipe não segue uma sequência lógica: [descrever quais elementos estão na ordem errada].</div></td></tr>
+        <tr><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Passo 8 — O indicador de foco/leitura permanece localizável quando o elemento está próximo de elementos fixos do app de leitura?</span></td><td>Navegação visual por swipe com VoiceOver ou TalkBack, observando elementos próximos a componentes fixos do app de leitura de PDF.</td><td><span class="wcag-tag">2.4.11</span></td><td><div class="text-template">Ao navegar por swipe no documento [nome_documento], o elemento [nome_elemento] fica totalmente coberto pela barra fixa [nome_barra] do visualizador de PDF.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Gestos e Alvos de Toque</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Mobile — Gestos e Alvos de Toque</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr class="row-new22"><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Passo 9 — Os alvos de toque têm no mínimo 24×24pt de área, ou espaçamento suficiente entre alvos menores?</span></td><td>Inspeção visual da tela, com régua de medida ou zoom do sistema.</td><td><span class="wcag-tag">2.5.8</span></td><td><div class="text-template">O elemento [nome_elemento] no documento [nome_documento] possui área de toque menor que 24×24pt, sem espaçamento suficiente e sem alternativa equivalente.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Ajuda</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Mobile — Ajuda</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr class="row-new22"><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Passo 10 — Quando o documento possui mecanismo de ajuda, ele aparece na mesma posição relativa em todas as páginas em que está presente?</span></td><td>Verificação visual navegando por diferentes páginas do documento.</td><td><span class="wcag-tag">3.2.6</span></td><td><div class="text-template">No documento [nome_documento] o mecanismo de ajuda [nome_mecanismo] muda de posição relativa entre as páginas em que aparece.</div></td></tr>
+      </tbody></table></div></div>
+
+      <div class="cat-block"><h3 class="cat-title">Autenticação</h3><div class="table-wrap"><table><caption class="sr-only">Script de Testes Visuais em PDF no Mobile — Autenticação</caption><thead><tr><th class="col-item">Item do Teste</th><th class="col-como">Como Testar</th><th class="col-wcag">Diretriz WCAG Afetada</th><th class="col-texto">Texto Padrão para Abertura de Defeitos</th></tr></thead><tbody>
+        <tr class="row-new22"><td><span class="item-text"><span class="new22-chip">Novo 2.2</span> Passo 11 — Quando o documento exige autenticação, é possível colar a senha e existe alternativa não cognitiva?</span></td><td>Testar colar no campo de senha/autenticação do PDF no mobile.</td><td><span class="wcag-tag">3.3.8</span></td><td><div class="text-template">No documento [nome_documento] não é possível colar a senha no campo de autenticação e/ou não há alternativa não cognitiva para o processo de autenticação.</div></td></tr>
+      </tbody></table></div></div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const toggle      = document.getElementById('toggle-wcag22');
+  const badgeHeader = document.getElementById('badge-versao');
+  const versionBadge= document.getElementById('version-badge');
+  const versaoTexto = document.getElementById('versao-texto');
+  const versaoLive  = document.getElementById('versao-live');
+
+  toggle.addEventListener('change', function () {
+    if (this.checked) {
+      document.body.classList.add('wcag22-on');
+      badgeHeader.textContent  = 'WCAG 2.2 — Nível AA';
+      versionBadge.textContent = 'v2.2';
+      versionBadge.classList.add('active22');
+      versaoTexto.textContent  = 'WCAG 2.1 + critérios novos da WCAG 2.2';
+      versaoLive.textContent   = 'WCAG 2.2 ativada. Critérios exclusivos da versão 2.2 agora estão visíveis.';
+    } else {
+      document.body.classList.remove('wcag22-on');
+      badgeHeader.textContent  = 'WCAG 2.1 — Nível AA';
+      versionBadge.textContent = 'v2.1';
+      versionBadge.classList.remove('active22');
+      versaoTexto.textContent  = 'WCAG 2.1 (base)';
+      versaoLive.textContent   = 'WCAG 2.1 ativada. Apenas critérios da versão 2.1 estão visíveis.';
+    }
+  });
+
+
+  // Marcar cat-blocks cujas tabelas só têm linhas row-new22
+  document.querySelectorAll('.cat-block').forEach(function(block) {
+    var allRows = block.querySelectorAll('tbody tr');
+    var new22Rows = block.querySelectorAll('tbody tr.row-new22');
+    if (allRows.length > 0 && allRows.length === new22Rows.length) {
+      block.classList.add('all-new22');
+    }
+  });
+
+  // Preencher captions das tabelas com o texto do cat-title acima
+  document.querySelectorAll('.cat-block').forEach(function(block) {
+    var title = block.querySelector('.cat-title');
+    var section = block.closest('section');
+    var sectionTitle = section ? section.querySelector('h2') : null;
+    if (title) {
+      var captionText = (sectionTitle ? sectionTitle.textContent.trim() + ' — ' : '') + title.textContent.trim();
+      block.querySelectorAll('table caption').forEach(function(cap) {
+        cap.textContent = captionText;
+      });
+    }
+  });
+
+  // Adicionar aria-label contextual nos links da sidebar
+  document.querySelectorAll('.nav-group').forEach(function(group) {
+    var groupLabel = group.querySelector('.nav-group-label');
+    if (!groupLabel) return;
+    var groupName = groupLabel.textContent.trim();
+    group.querySelectorAll('.nav-link').forEach(function(link) {
+      var linkText = link.textContent.trim();
+      link.setAttribute('aria-label', linkText + ' — ' + groupName);
+    });
+  });
+</script>
+</body>
+</html>
